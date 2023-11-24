@@ -9,3 +9,8 @@ body {
 figcaption a {
     font-family: 'Pacifico', cursive;
 }
+
+figure img {
+    max-width: 100%;
+    height: auto;
+}
