@@ -5,3 +5,7 @@ body {
 .center-align {
     text-align: center;
 }
+
+figcaption a {
+    font-family: 'Pacifico', cursive;
+}
