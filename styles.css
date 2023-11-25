@@ -14,3 +14,8 @@ figure img {
     max-width: 100%;
     height: auto;
 }
+
+figcaption a {
+    color: lightgray;
+    display: block;
+}
