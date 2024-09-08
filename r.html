@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ben Floyd - Resume</title>
+    <style>
+        body {
+            font-family: Leelawadee, 'Noto Sans', Arial, sans-serif;
+            line-height: 1.2;
+            color: #000;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+            background-color: #f0f0f0;
+        }
+        .paper {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 0.5in;
+            position: relative;
+        }
+        h1 {
+            font-size: 24px;
+            margin: 0;
+            font-weight: normal;
+        }
+        .contact-info {
+            font-size: 12px;
+            margin-bottom: 0.2in;
+        }
+        .section-title {
+            background-color: #94B6D2;
+            padding: 2px 5px;
+            margin-top: 0.2in;
+            margin-bottom: 0.1in;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-bottom: 0.2in;
+        }
+        .skill-item {
+            background-color: #e6f2ff;
+            padding: 2px 5px;
+            font-size: 12px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .blue-background {
+            background-color: #e6f2ff;
+            padding: 2px 5px;
+            font-size: 12px;
+            text-align: center;
+        }
+        .experience-item {
+            margin-bottom: 0.2in;
+            font-size: 12px;
+            text-align: center;
+        }
+        .job-title {
+            font-weight: bold;
+            color: #345C7D;
+            display: block;
+        }
+        .company {
+            font-style: italic;
+            color: #345C7D;
+            display: block;
+        }
+        ul {
+            margin: 0.05in 0;
+            padding-left: 0.2in;
+            text-align: left;
+        }
+        li {
+            margin-bottom: 0.05in;
+        }
+        a {
+            color: #0000EE;
+            text-decoration: underline;
+        }
+        .two-column {
+            display: flex;
+            justify-content: space-between;
+        }
+        .column {
+            width: 48%;
+        }
+        p {
+            font-size: 12px;
+            margin: 0.05in 0;
+        }
+        .skill-summary {
+            text-align: center;
+        }
+        .qr-code {
+            position: absolute;
+            top: 0.5in;
+            right: 0.5in;
+            width: 48px;
+            height: 48px;
+        }
+    </style>
+</head>
+<body>
+    <div class="paper">
+        <header>
+            <h1>Ben Floyd</h1>
+            <div class="contact-info">
+                01 (208) 891-6337 | <a href="mailto:bfloydd@gmail.com">bfloydd@gmail.com</a> | <a href="http://b.floy.dev">b.floy.dev</a>
+            </div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=48x48&data=https://b.floy.dev" alt="QR Code" class="qr-code">
+        </header>
+
+        <main>
+            <div class="section-title">SKILLS</div>
+            <div class="skills-grid">
+                <div class="skill-item">C#.NET, JAVA, ECMASCRIPT, ++</div>
+                <div class="skill-item">OOP, OOA/D, AOP, BDD</div>
+                <div class="skill-item">FULL STACK, API, REST</div>
+                <div class="skill-item">AGILE, SCRUM, XP, SAFE</div>
+                <div class="skill-item">CLEAN CODE, SOLID</div>
+                <div class="skill-item">MSA, SCALABILITY, EDA</div>
+                <div class="skill-item">ENT, INT DESIGN PAT, GOF</div>
+                <div class="skill-item">ANGULAR, ++</div>
+                <div class="skill-item">SQL, DB MODELING</div>
+            </div>
+
+            <p class="skill-summary">Years of professional experience in key languages and frameworks.</p>
+            <p class="skill-summary">Innovative large-scale applications with a clear architectural design and validated quality.</p>
+            <p class="skill-summary">Leading cross-functional teams to project delivery; mentoring and teaching along the way.</p>
+            <p class="skill-summary">A driver of project success; advocating Agile, Scrum, and SAFe practices.</p>
+
+            <div class="section-title">PROFESSIONAL EXPERIENCE</div>
+
+            <div class="two-column">
+                <div class="column">
+                    <div class="experience-item">
+                        <div class="blue-background">
+                            <span class="job-title">SOLUTIONS ARCHITECT</span>
+                            <span class="company">J.R. SIMPLOT, 2018-2024</span>
+                        </div>
+                        <ul>
+                            <li>Complete conversion from ETL, SSIS to <strong>Event Driven Architecture</strong> using Azure Event Hubs, C# .NET, Azure Functions, and Anypoint MuleSoft 4/7.</li>
+                            <li>Mentoring and upskilling team members on a continuous basis.</li>
+                            <li><strong>Matchit architecture:</strong> SPA application. Tech stack, build is focused on reduced support times. Code focus on "just enough" engineering to prevent inadvertent bugs and quickly create new development.</li>
+                            <li><strong>Coveo integration</strong> into two applications.</li>
+                            <li><strong>CIAM evaluation,</strong> POC, initial implementation.</li>
+                            <li><strong>PIM solution design.</strong></li>
+                            <li>Central Login Page <strong>CLP, Connect solution design.</strong></li>
+                            <li>Winner of <strong>SIFT Innovation</strong> competition.</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="blue-background">
+                            <span class="job-title">SENIOR WEB DEVELOPER</span>
+                            <span class="company">J.R. SIMPLOT, 2018-2019</span>
+                        </div>
+                        <ul>
+                            <li><strong>Agriview Remediation Proposal</strong> - evaluation and redesign using an event bus to regulate ordering.</li>
+                            <li>Introduction of <strong>coding standards</strong> among team as a Center of Excellence CoE.</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="blue-background">
+                            <span class="job-title">LEAD SOFTWARE ENGINEER</span>
+                            <span class="company">BEHAVIOR IMAGING SOLUTIONS, 2009-2011</span>
+                        </div>
+                        <ul>
+                            <li><strong>Behavior Connect product to market.</strong> Java, Adobe Flex, Adobe Air in ActionScript, Zend Framework API.</li>
+                            <li>Introduce Scrum as a new development practice and acted as Scrum master through initial projects.</li>
+                            <li>Strategize with business leaders for long-term impact.</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="blue-background">
+                            <span class="job-title">SOFTWARE ENGINEER</span>
+                            <span class="company">BEEF NORTHWEST FEEDERS, 2007 - 2009</span>
+                        </div>
+                        <ul>
+                            <li>Develop risk analysis and <strong>accounting software.</strong> C#.NET. Set coding standards; code reviews, CI/CD.</li>
+                            <li>Define software architecture, engineering process across teams.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="experience-item">
+                        <div class="blue-background">
+                            <span class="job-title">SOFTWARE DEVELOPMENT MANAGER<br>SOFTWARE ENGINEER</span>
+                            <span class="company">COMPUNET, 2015-2018</span>
+                        </div>
+                        <ul>
+                            <li>Launch of <strong>Software Innovation Group;</strong> its core values, coding practice, areas of business, and expertise.</li>
+                            <li><strong>Mentor and grow a team of developers</strong> for building applications in Java, Spring MVC, C#.NET, Python, PHP, SQL, NoSQL, JavaScript / Angular, Material Design, Docker, and Microservices.</li>
+                            <li><strong>Application architectural lead</strong> in all projects.</li>
+                            <li>Led effort to migrate ERP (ConnectWise to Oracle ERP) and optimize internal operations with new software, reducing operations cost.</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="blue-background">
+                            <span class="job-title">SENIOR SOFTWARE ENGINEER</span>
+                            <span class="company">INTEGRATED DIGITAL SOLUTIONS, 2011-2015</span>
+                        </div>
+                        <ul>
+                            <li><strong>CosmoBody, Good Housekeeping products to market.</strong> AngularJS, jQuery, JavaScript, RoR.</li>
+                            <li>Set-top-box UI development. DVR, HLS playback. Converted C++ to JavaScript. <strong>Emphasis on scalable architecture.</strong></li>
+                            <li>Develop and integrate video streaming service, Totalmovie. C#.NET, RoR, and PHP.</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="blue-background">
+                            <span class="job-title">FOREIGN MANAGER<br>TEACHER, TRAINER</span>
+                            <span class="company">ASTON ENGLISH, 2005 - 2007</span>
+                        </div>
+                        <ul>
+                            <li>Managing and training foreign staff, teaching classes of all ages, doing school promotions, and helping new teachers integrate with local customs.</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="blue-background">
+                            <span class="job-title">SOFTWARE ENGINEER</span>
+                            <span class="company">EMERGECORE NETWORKS, 2001 - 2005</span>
+                        </div>
+                        <ul>
+                            <li><strong>Product design and development;</strong> It-100, IT-500 to market. JavaScript, Perl, Python, C, PHP.</li>
+                            <li>Create a custom Linux distribution. Custom CI/CD. IaC before those terms were in common use.</li>
+            
+                <li>Project manager, delivering Gantt charts and roadmaps.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
