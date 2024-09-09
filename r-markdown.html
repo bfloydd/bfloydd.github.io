@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ben Floyd - Resume</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .contact-info {
+            text-align: right;
+            margin-top: -40px;
+        }
+
+        .contact-info a {
+            color: #ffa500;
+            text-decoration: none;
+        }
+
+        h2 {
+            background-color: #b0c4de;
+            color: #fff;
+            padding: 5px 10px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+
+        .skills-grid p {
+            background-color: #e6f2ff;
+            padding: 5px 10px;
+            text-align: center;
+            font-size: 0.8em;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            text-transform: uppercase;
+        }
+
+        .experience-item {
+            margin-bottom: 20px;
+        }
+
+        .experience-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .experience-header p {
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        ul {
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .gist-meta, .gist-file, .gist-data {
+            border: none !important;
+            background: none !important;
+        }
+
+        .gist .blob-wrapper {
+            background: none !important;
+        }
+
+        .gist-meta {
+            display: none !important;
+        }
+
+        .markdown-body table {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <script src="https://gist.github.com/bfloydd/52e30a52f5f911522ff5b882320a2821.js"></script>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            setTimeout(() => {
+                const gistContent = document.querySelector('.markdown-body');
+                if (gistContent) {
+                    // Move contact info to the right
+                    const contactInfo = gistContent.querySelector('p:nth-child(2)');
+                    if (contactInfo) {
+                        contactInfo.classList.add('contact-info');
+                        gistContent.insertBefore(contactInfo, gistContent.firstChild);
+                    }
+
+                    // Create skills grid
+                    const skillsSection = gistContent.querySelector('h2:nth-of-type(1)').nextElementSibling;
+                    if (skillsSection) {
+                        const skillsGrid = document.createElement('div');
+                        skillsGrid.className = 'skills-grid';
+                        const skillsList = skillsSection.textContent.split('\n').filter(skill => skill.trim() !== '');
+                        skillsList.forEach(skill => {
+                            const skillElement = document.createElement('p');
+                            skillElement.textContent = skill.trim();
+                            skillsGrid.appendChild(skillElement);
+                        });
+                        skillsSection.parentNode.replaceChild(skillsGrid, skillsSection);
+                    }
+
+                    // Style experience sections
+                    const experienceSections = gistContent.querySelectorAll('h3');
+                    experienceSections.forEach(section => {
+                        const header = section.nextElementSibling;
+                        if (header && header.tagName === 'P') {
+                            header.classList.add('experience-header');
+                            const [title, company] = header.innerHTML.split('<br>');
+                            header.innerHTML = `<p><span>${title}</span><span>${company}</span></p>`;
+                        }
+                    });
+                }
+            }, 1000); // Wait for the gist content to load
+        });
+    </script>
+</body>
+
+</html>
