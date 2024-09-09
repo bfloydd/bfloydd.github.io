@@ -12,7 +12,7 @@
             max-width: 8.5in;
             min-width: 360px;
             margin: 0 auto;
-            padding: 0.5in;
+            padding: 0.5in 0.5in 1.5in;
             background-color: #f0f0f0;
         }
         .paper {
@@ -20,6 +20,7 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             padding: 0.5in;
             position: relative;
+            margin-bottom: .25in;
         }
         h1 {
             font-size: 24px;
@@ -28,7 +29,7 @@
         }
         .contact-info {
             font-size: 10px;
-            margin-bottom: 0.2in;
+            margin-bottom: 0.1in;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -39,7 +40,7 @@
         .section-title {
             background-color: #94B6D2;
             padding: 2px 5px;
-            margin-top: 0.2in;
+            margin-top: 0.1in;
             margin-bottom: 0.2in;
             font-size: 14px;
             font-weight: bold;
@@ -115,6 +116,23 @@
             width: 60px;
             height: 60px;
         }
+        .pdf-button {
+            display: block;
+            width: 150px;
+            margin: 0 auto;
+            padding: 10px 20px;
+            background-color: #94B6D2;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none; /* Added this line to remove the grey border */
+        }
+        .pdf-button:hover {
+            background-color: #7A99B2;
+        }
         @media (max-width: 450px) {
             .skills-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -127,6 +145,7 @@
             }
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
     <div class="paper">
@@ -137,7 +156,7 @@
                 <a href="mailto:bfloydd@gmail.com">bfloydd@gmail.com</a>
                 <a href="http://b.floy.dev">b.floy.dev</a>
             </div>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=https://b.floy.dev" alt="QR Code" class="qr-code">
+            <img src="q.png" alt="QR Code" class="qr-code">
         </header>
 
         <main>
@@ -266,5 +285,21 @@
             </div>
         </main>
     </div>
+    <button onclick="generatePDF()" class="pdf-button">Get the PDF</button>
+
+    <script>
+        function generatePDF() {
+            const element = document.querySelector('.paper');
+            const opt = {
+                margin: 0,
+                filename: 'ben_floyd_resume.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
 </body>
 </html>
