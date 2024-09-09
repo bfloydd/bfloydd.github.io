@@ -26,14 +26,20 @@
             font-weight: normal;
         }
         .contact-info {
-            font-size: 12px;
+            font-size: 10px;
             margin-bottom: 0.2in;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .contact-info > * {
+            margin-bottom: 2px;
         }
         .section-title {
             background-color: #94B6D2;
             padding: 2px 5px;
             margin-top: 0.2in;
-            margin-bottom: 0.1in;
+            margin-bottom: 0.2in;
             font-size: 14px;
             font-weight: bold;
             color: white;
@@ -115,7 +121,9 @@
         <header>
             <h1>Ben Floyd</h1>
             <div class="contact-info">
-                01 (208) 891-6337 | <a href="mailto:bfloydd@gmail.com">bfloydd@gmail.com</a> | <a href="http://b.floy.dev">b.floy.dev</a>
+                <span>01 (208) 891-6337</span>
+                <a href="mailto:bfloydd@gmail.com">bfloydd@gmail.com</a>
+                <a href="http://b.floy.dev">b.floy.dev</a>
             </div>
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=48x48&data=https://b.floy.dev" alt="QR Code" class="qr-code">
         </header>
@@ -239,8 +247,7 @@
                         <ul>
                             <li><strong>Product design and development;</strong> It-100, IT-500 to market. JavaScript, Perl, Python, C, PHP.</li>
                             <li>Create a custom Linux distribution. Custom CI/CD. IaC before those terms were in common use.</li>
-            
-                <li>Project manager, delivering Gantt charts and roadmaps.</li>
+                            <li>Project manager, delivering Gantt charts and roadmaps.</li>
                         </ul>
                     </div>
                 </div>
