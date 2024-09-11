@@ -7,7 +7,7 @@ body {
 }
 
 figcaption a {
-    font-family: 'Pacifico', 'Brush Script MT', cursive;
+    font-family: 'Brush Script MT', cursive, 'Pacifico', 'Chalkboard', fantasy;
     font-display: swap;
     font-size: x-large;
     text-decoration: none;
