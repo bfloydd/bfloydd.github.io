@@ -7,7 +7,10 @@ body {
 }
 
 figcaption a {
-    font-family: 'Pacifico', cursive;
+    font-family: 'Pacifico', 'Brush Script MT', cursive;
+    font-display: swap;
+    font-size: x-large;
+    text-decoration: none;
 }
 
 figure img {
