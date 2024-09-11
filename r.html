@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon/favicon.ico" type="image/x-icon">
     <title>Ben Floyd - Resume</title>
     <style>
         body {
@@ -51,7 +52,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 5px;
-            margin-bottom: 0.2in;
+            margin-bottom: 0.1in;
         }
         .skill-item {
             background-color: #e6f2ff;
@@ -109,6 +110,10 @@
         .skill-summary {
             text-align: center;
         }
+        .skill-summaries {
+            margin-top: 0.15in;
+            margin-bottom: 0.15in;
+        }
         .qr-code {
             position: absolute;
             top: 0.5in;
@@ -128,7 +133,7 @@
             font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
-            border: none; /* Added this line to remove the grey border */
+            border: none;
         }
         .pdf-button:hover {
             background-color: #7A99B2;
@@ -143,161 +148,184 @@
             .column {
                 width: 100%;
             }
+            .pdf-button {
+                display: none;
+            }
+        }
+        .pdf-content {
+            padding: 0;
+            margin: 0;
+            background-color: white;
+        }
+        @media print {
+            body {
+                padding: 0;
+                margin: 0;
+                background-color: white;
+            }
+            .paper {
+                box-shadow: none;
+                padding: 0.5in;
+                margin: 0;
+            }
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-    <div class="paper">
-        <header>
-            <h1>Ben Floyd</h1>
-            <div class="contact-info">
-                <span>01 (208) 891-6337</span>
-                <a href="mailto:bfloydd@gmail.com">bfloydd@gmail.com</a>
-                <a href="http://b.floy.dev">b.floy.dev</a>
-            </div>
-            <img src="q.png" alt="QR Code" class="qr-code">
-        </header>
+    <div class="pdf-content">
+        <div class="paper">
+            <header>
+                <h1>Ben Floyd</h1>
+                <div class="contact-info">
+                    <span>01 (208) 891-6337</span>
+                    <a href="mailto:bfloydd@gmail.com">bfloydd@gmail.com</a>
+                    <a href="http://b.floy.dev">b.floy.dev</a>
+                </div>
+                <img src="q.png" alt="QR Code" class="qr-code">
+            </header>
 
-        <main>
-            <div class="section-title">SKILLS</div>
-            <div class="skills-grid">
-                <div class="skill-item">C#.NET, JAVA, ECMASCRIPT, ++</div>
-                <div class="skill-item">OOP, OOA/D, AOP, BDD</div>
-                <div class="skill-item">FULL STACK, API, REST</div>
-                <div class="skill-item">AGILE, SCRUM, XP, SAFE</div>
-                <div class="skill-item">CLEAN CODE, SOLID</div>
-                <div class="skill-item">MSA, SCALABILITY, EDA</div>
-                <div class="skill-item">ENT, INT DESIGN PAT, GOF</div>
-                <div class="skill-item">ANGULAR, ++</div>
-                <div class="skill-item">SQL, DB MODELING</div>
-            </div>
-
-            <p class="skill-summary">Years of professional experience in key languages and frameworks.</p>
-            <p class="skill-summary">Innovative large-scale applications with a clear architectural design and validated quality.</p>
-            <p class="skill-summary">Leading cross-functional teams to project delivery; mentoring and teaching along the way.</p>
-            <p class="skill-summary">A driver of project success; advocating Agile, Scrum, and SAFe practices.</p>
-
-            <div class="section-title">PROFESSIONAL EXPERIENCE</div>
-
-            <div class="two-column">
-                <div class="column">
-                    <div class="experience-item">
-                        <div class="blue-background">
-                            <span class="job-title">SOLUTIONS ARCHITECT</span>
-                            <span class="company">J.R. SIMPLOT, 2018-2024</span>
-                        </div>
-                        <ul>
-                            <li>Complete conversion from ETL, SSIS to <strong>Event Driven Architecture</strong> using Azure Event Hubs, C# .NET, Azure Functions, and Anypoint MuleSoft 4/7.</li>
-                            <li>Mentoring and upskilling team members on a continuous basis.</li>
-                            <li><strong>Matchit architecture:</strong> SPA application. Tech stack, build is focused on reduced support times. Code focus on "just enough" engineering to prevent inadvertent bugs and quickly create new development.</li>
-                            <li><strong>Coveo integration</strong> into two applications.</li>
-                            <li><strong>CIAM evaluation,</strong> POC, initial implementation.</li>
-                            <li><strong>PIM solution design.</strong></li>
-                            <li>Central Login Page <strong>CLP, Connect solution design.</strong></li>
-                            <li>Winner of <strong>SIFT Innovation</strong> competition.</li>
-                        </ul>
-                    </div>
-
-                    <div class="experience-item">
-                        <div class="blue-background">
-                            <span class="job-title">SENIOR WEB DEVELOPER</span>
-                            <span class="company">J.R. SIMPLOT, 2018-2019</span>
-                        </div>
-                        <ul>
-                            <li><strong>Agriview Remediation Proposal</strong> - evaluation and redesign using an event bus to regulate ordering.</li>
-                            <li>Introduction of <strong>coding standards</strong> among team as a Center of Excellence CoE.</li>
-                        </ul>
-                    </div>
-
-                    <div class="experience-item">
-                        <div class="blue-background">
-                            <span class="job-title">LEAD SOFTWARE ENGINEER</span>
-                            <span class="company">BEHAVIOR IMAGING SOLUTIONS, 2009-2011</span>
-                        </div>
-                        <ul>
-                            <li><strong>Behavior Connect product to market.</strong> Java, Adobe Flex, Adobe Air in ActionScript, Zend Framework API.</li>
-                            <li>Introduce Scrum as a new development practice and acted as Scrum master through initial projects.</li>
-                            <li>Strategize with business leaders for long-term impact.</li>
-                        </ul>
-                    </div>
-
-                    <div class="experience-item">
-                        <div class="blue-background">
-                            <span class="job-title">SOFTWARE ENGINEER</span>
-                            <span class="company">BEEF NORTHWEST FEEDERS, 2007 - 2009</span>
-                        </div>
-                        <ul>
-                            <li>Develop risk analysis and <strong>accounting software.</strong> C#.NET. Set coding standards; code reviews, CI/CD.</li>
-                            <li>Define software architecture, engineering process across teams.</li>
-                        </ul>
-                    </div>
+            <main>
+                <div class="section-title">SKILLS</div>
+                <div class="skills-grid">
+                    <div class="skill-item">C#.NET, JAVA, ECMASCRIPT, ++</div>
+                    <div class="skill-item">OOP, OOA/D, AOP, BDD</div>
+                    <div class="skill-item">FULL STACK, API, REST</div>
+                    <div class="skill-item">AGILE, SCRUM, XP, SAFE</div>
+                    <div class="skill-item">CLEAN CODE, SOLID</div>
+                    <div class="skill-item">MSA, SCALABILITY, EDA</div>
+                    <div class="skill-item">ENT, INT DESIGN PAT, GOF</div>
+                    <div class="skill-item">ANGULAR, ++</div>
+                    <div class="skill-item">SQL, DB MODELING</div>
                 </div>
 
-                <div class="column">
-                    <div class="experience-item">
-                        <div class="blue-background">
-                            <span class="job-title">SOFTWARE DEVELOPMENT MANAGER<br>SOFTWARE ENGINEER</span>
-                            <span class="company">COMPUNET, 2015-2018</span>
+                <div class="skill-summaries">
+                    <p class="skill-summary">Years of professional experience in key languages and frameworks.</p>
+                    <p class="skill-summary">Innovative large-scale applications with a clear architectural design and validated quality.</p>
+                    <p class="skill-summary">Leading cross-functional teams to project delivery; mentoring and teaching along the way.</p>
+                    <p class="skill-summary">A driver of project success; advocating Agile, Scrum, and SAFe practices.</p>
+                </div>
+
+                <div class="section-title">PROFESSIONAL EXPERIENCE</div>
+
+                <div class="two-column">
+                    <div class="column">
+                        <div class="experience-item">
+                            <div class="blue-background">
+                                <span class="job-title">SOLUTIONS ARCHITECT</span>
+                                <span class="company">J.R. SIMPLOT, 2018-2024</span>
+                            </div>
+                            <ul>
+                                <li>Complete conversion from ETL, SSIS to <strong>Event Driven Architecture</strong> using Azure Event Hubs, C# .NET, Azure Functions, and Anypoint MuleSoft 4/7.</li>
+                                <li>Mentoring and upskilling team members on a continuous basis.</li>
+                                <li><strong>Matchit architecture:</strong> SPA application. Tech stack, build is focused on reduced support times. Code focus on "just enough" engineering to prevent inadvertent bugs and quickly create new development.</li>
+                                <li><strong>Coveo integration</strong> into two applications.</li>
+                                <li><strong>CIAM evaluation,</strong> POC, initial implementation.</li>
+                                <li><strong>PIM solution design.</strong></li>
+                                <li>Central Login Page <strong>CLP, Connect solution design.</strong></li>
+                                <li>Winner of <strong>SIFT Innovation</strong> competition.</li>
+                            </ul>
                         </div>
-                        <ul>
-                            <li>Launch of <strong>Software Innovation Group;</strong> its core values, coding practice, areas of business, and expertise.</li>
-                            <li><strong>Mentor and grow a team of developers</strong> for building applications in Java, Spring MVC, C#.NET, Python, PHP, SQL, NoSQL, JavaScript / Angular, Material Design, Docker, and Microservices.</li>
-                            <li><strong>Application architectural lead</strong> in all projects.</li>
-                            <li>Led effort to migrate ERP (ConnectWise to Oracle ERP) and optimize internal operations with new software, reducing operations cost.</li>
-                        </ul>
+
+                        <div class="experience-item">
+                            <div class="blue-background">
+                                <span class="job-title">SENIOR WEB DEVELOPER</span>
+                                <span class="company">J.R. SIMPLOT, 2018-2019</span>
+                            </div>
+                            <ul>
+                                <li><strong>Agriview Remediation Proposal</strong> - evaluation and redesign using an event bus to regulate ordering.</li>
+                                <li>Introduction of <strong>coding standards</strong> among team as a Center of Excellence CoE.</li>
+                            </ul>
+                        </div>
+
+                        <div class="experience-item">
+                            <div class="blue-background">
+                                <span class="job-title">LEAD SOFTWARE ENGINEER</span>
+                                <span class="company">BEHAVIOR IMAGING SOLUTIONS, 2009-2011</span>
+                            </div>
+                            <ul>
+                                <li><strong>Behavior Connect product to market.</strong> Java, Adobe Flex, Adobe Air in ActionScript, Zend Framework API.</li>
+                                <li>Introduce Scrum as a new development practice and acted as Scrum master through initial projects.</li>
+                                <li>Strategize with business leaders for long-term impact.</li>
+                            </ul>
+                        </div>
+
+                        <div class="experience-item">
+                            <div class="blue-background">
+                                <span class="job-title">SOFTWARE ENGINEER</span>
+                                <span class="company">BEEF NORTHWEST FEEDERS, 2007 - 2009</span>
+                            </div>
+                            <ul>
+                                <li>Develop risk analysis and <strong>accounting software.</strong> C#.NET. Set coding standards; code reviews, CI/CD.</li>
+                                <li>Define software architecture, engineering process across teams.</li>
+                            </ul>
+                        </div>
                     </div>
 
-                    <div class="experience-item">
-                        <div class="blue-background">
-                            <span class="job-title">SENIOR SOFTWARE ENGINEER</span>
-                            <span class="company">INTEGRATED DIGITAL SOLUTIONS, 2011-2015</span>
+                    <div class="column">
+                        <div class="experience-item">
+                            <div class="blue-background">
+                                <span class="job-title">SOFTWARE DEVELOPMENT MANAGER<br>SOFTWARE ENGINEER</span>
+                                <span class="company">COMPUNET, 2015-2018</span>
+                            </div>
+                            <ul>
+                                <li>Launch of <strong>Software Innovation Group;</strong> its core values, coding practice, areas of business, and expertise.</li>
+                                <li><strong>Mentor and grow a team of developers</strong> for building applications in Java, Spring MVC, C#.NET, Python, PHP, SQL, NoSQL, JavaScript / Angular, Material Design, Docker, and Microservices.</li>
+                                <li><strong>Application architectural lead</strong> in all projects.</li>
+                                <li>Led effort to migrate ERP (ConnectWise to Oracle ERP) and optimize internal operations with new software, reducing operations cost.</li>
+                            </ul>
                         </div>
-                        <ul>
-                            <li><strong>CosmoBody, Good Housekeeping products to market.</strong> AngularJS, jQuery, JavaScript, RoR.</li>
-                            <li>Set-top-box UI development. DVR, HLS playback. Converted C++ to JavaScript. <strong>Emphasis on scalable architecture.</strong></li>
-                            <li>Develop and integrate video streaming service, Totalmovie. C#.NET, RoR, and PHP.</li>
-                        </ul>
-                    </div>
 
-                    <div class="experience-item">
-                        <div class="blue-background">
-                            <span class="job-title">FOREIGN MANAGER<br>TEACHER, TRAINER</span>
-                            <span class="company">ASTON ENGLISH, 2005 - 2007</span>
+                        <div class="experience-item">
+                            <div class="blue-background">
+                                <span class="job-title">SENIOR SOFTWARE ENGINEER</span>
+                                <span class="company">INTEGRATED DIGITAL SOLUTIONS, 2011-2015</span>
+                            </div>
+                            <ul>
+                                <li><strong>CosmoBody, Good Housekeeping products to market.</strong> AngularJS, jQuery, JavaScript, RoR.</li>
+                                <li>Set-top-box UI development. DVR, HLS playback. Converted C++ to JavaScript. <strong>Emphasis on scalable architecture.</strong></li>
+                                <li>Develop and integrate video streaming service, Totalmovie. C#.NET, RoR, and PHP.</li>
+                            </ul>
                         </div>
-                        <ul>
-                            <li>Managing and training foreign staff, teaching classes of all ages, doing school promotions, and helping new teachers integrate with local customs.</li>
-                        </ul>
-                    </div>
 
-                    <div class="experience-item">
-                        <div class="blue-background">
-                            <span class="job-title">SOFTWARE ENGINEER</span>
-                            <span class="company">EMERGECORE NETWORKS, 2001 - 2005</span>
+                        <div class="experience-item">
+                            <div class="blue-background">
+                                <span class="job-title">FOREIGN MANAGER<br>TEACHER, TRAINER</span>
+                                <span class="company">ASTON ENGLISH, 2005 - 2007</span>
+                            </div>
+                            <ul>
+                                <li>Managing and training foreign staff, teaching classes of all ages, doing school promotions, and helping new teachers integrate with local customs.</li>
+                            </ul>
                         </div>
-                        <ul>
-                            <li><strong>Product design and development;</strong> It-100, IT-500 to market. JavaScript, Perl, Python, C, PHP.</li>
-                            <li>Create a custom Linux distribution. Custom CI/CD. IaC before those terms were in common use.</li>
-                            <li>Project manager, delivering Gantt charts and roadmaps.</li>
-                        </ul>
+
+                        <div class="experience-item">
+                            <div class="blue-background">
+                                <span class="job-title">SOFTWARE ENGINEER</span>
+                                <span class="company">EMERGECORE NETWORKS, 2001 - 2005</span>
+                            </div>
+                            <ul>
+                                <li><strong>Product design and development;</strong> IT-100, IT-500 to market. JavaScript, Perl, Python, C, PHP.</li>
+                                <li>Create a custom Linux distribution. Custom CI/CD. IaC before those terms were in common use.</li>
+                                <li>Project manager, delivering Gantt charts and roadmaps.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </div>
     </div>
     <button onclick="generatePDF()" class="pdf-button">Get the PDF</button>
 
     <script>
         function generatePDF() {
-            const element = document.querySelector('.paper');
+            const element = document.querySelector('.pdf-content');
             const opt = {
                 margin: 0,
                 filename: 'ben_floyd_resume.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0  },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
             };
-
             html2pdf().set(opt).from(element).save();
         }
     </script>
