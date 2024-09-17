@@ -55,14 +55,14 @@ h1 {
     align-items: center;
     justify-content: center;
 }
-.blue-background {
+.experience-header {
     background-color: #e6f2ff;
     padding: 2px 5px;
     font-size: 12px;
     text-align: center;
 }
 .experience-item {
-    margin-bottom: 0.2in;
+    margin-bottom: 0.1in;
     font-size: 12px;
     text-align: center;
 }
