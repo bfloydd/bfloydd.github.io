@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
 body {
     background-color: black;
 }
@@ -6,19 +8,16 @@ body {
     text-align: center;
 }
 
-figcaption a {
-    font-family: monospace, 'Brush Script MT', cursive, 'Pacifico';
-    font-display: swap;
-    font-size: x-large;
-    text-decoration: none;
-}
-
 figure img {
     max-width: 100%;
     height: auto;
 }
 
 figcaption a {
+    font-family: 'Great Vibes', cursive;
+    font-display: swap;
+    font-size: x-large;
+    text-decoration: none;
     color: lightgray;
     display: block;
 }
