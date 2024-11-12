@@ -4,6 +4,14 @@
 
 body {
     background-color: black;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
 }
 
 .center-align {
@@ -69,4 +77,14 @@ figcaption a {
     color: #888;
     font-size: 0.7rem;
     margin-top: 0.4rem;
+}
+
+footer {
+    margin-top: auto;
+    padding-bottom: 1rem;
+    text-align: center;
+    color: #ccc;
+    opacity: 0.3;
+    font-size: 0.8em;
+    margin-top: 2em;
 }
