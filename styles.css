@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap');
-/* @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500&display=swap'); */
 
 :root {
     --color-background: #000000;
@@ -10,6 +9,12 @@
     --color-card-hover: rgba(255, 255, 255, 0.08);
     --font-heading: 'Great Vibes', cursive;
     --font-body: 'Major Mono Display', monospace;
+    --font-size-small: 0.7rem;
+    --font-size-large: 1.5rem;
+    --margin-standard: 1rem;
+    --margin-small: 0.5rem;
+    --padding-standard: 1rem;
+    --transition-standard: transform 0.2s ease, background 0.2s ease;
 }
 
 /* Add reduced motion preference */
@@ -28,14 +33,15 @@ html {
 }
 
 body {
-    background-color: black;
+    background-color: var(--color-background);
+    color: var(--color-text);
     min-height: 100vh;
     margin: 0;
     display: flex;
     flex-direction: column;
 }
 a:focus {
-    outline: 2px solid #5bbad5;
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
 }
 
@@ -55,22 +61,23 @@ figure img {
     height: auto;
     max-width: 500px;
     display: block;
-    margin-bottom: 0.5rem;
+    margin: 0 auto;
 }
 
 figure {
-    display: block;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin: 0 auto;
     padding: 1rem;
 }
 
 figcaption {
-    font-family: 'Great Vibes', cursive;
+    font-family: var(--font-heading);
     font-display: swap;
-    font-size: x-large;
+    font-size: var(--font-size-large);
     text-decoration: none;
-    color: lightgray;
+    color: var(--color-text);
     display: block;
 }
 
@@ -85,27 +92,27 @@ figcaption {
 }
 
 .project-card {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--color-card-bg);
     border-radius: 8px;
-    padding: 1rem;
-    transition: transform 0.2s ease, background 0.2s ease;
-    font-family: 'Major Mono Display', monospace;
+    padding: var(--padding-standard);
+    transition: var(--transition-standard);
+    font-family: var(--font-body);
     display: block;
-    color: lightgray;
+    color: var(--color-text);
     text-decoration: none;
 }
 
 .project-card:hover,
 .project-card:focus-visible {
     transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--color-card-hover);
     outline: none;
 }
 
 .project-card p {
     color: #888;
-    font-size: 0.7rem;
-    margin-top: 0.4rem;
+    font-size: var(--font-size-small);
+    margin-top: var(--margin-small);
 }
 
 footer {
@@ -114,7 +121,7 @@ footer {
     text-align: center;
     color: #ccc;
     opacity: 0.3;
-    font-size: 0.8em;
+    font-size: var(--font-size-small);
     margin-top: 2em;
 }
 
