@@ -51,10 +51,9 @@ main {
 }
 
 figure img {
-    width: 500px;
-    height: 600px;
-    max-width: 100%;
+    width: 100%;
     height: auto;
+    max-width: 500px;
     display: block;
     margin-bottom: 0.5rem;
 }

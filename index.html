@@ -8,8 +8,8 @@
     <meta name="description" content="Ben Floyd CV">
     <meta name="keywords" content="Resume, LinkedIn, Ben Floyd, Personal Webpage">
     <meta property="og:title" content="Ben Floyd">
-    <meta property="og:description" content="Ben Floyd CV">
-    <meta property="og:image" content="salute.gif">
+    <meta property="og:description" content="Ben Floyd">
+    <!-- <meta property="og:image" content="salute.gif"> -->
     <meta property="og:url" content="https://b.floy.dev">
     <link rel="stylesheet" href="styles.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
@@ -27,7 +27,7 @@
 <body>
     <main class="center-align">
         <figure>
-            <img src="astro.jpg" alt="Ben Floyd's profile picture" loading="lazy" />
+            <img src="astro.jpg" alt="Ben Floyd's profile picture...?"/>
             <figcaption>Ben Floyd</figcaption>
         </figure>
         <h1 class="visually-hidden">Ben Floyd</h1>
@@ -51,6 +51,14 @@
     </footer>
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const img = document.querySelector("figure img");
+            img.onload = function() {
+                img.classList.add("loaded");
+            };
+        });
     </script>
 </body>
 
