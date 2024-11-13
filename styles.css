@@ -7,7 +7,7 @@
     --color-accent: #5bbad5;
     --color-card-bg: rgba(255, 255, 255, 0.05);
     --color-card-hover: rgba(255, 255, 255, 0.08);
-    --font-heading: 'Great Vibes', cursive;
+    --font-heading: 'Great Vibes';
     --font-body: 'Major Mono Display', monospace;
     --font-size-small: 0.7rem;
     --font-size-large: 1.5rem;
@@ -17,7 +17,6 @@
     --transition-standard: transform 0.2s ease, background 0.2s ease;
 }
 
-/* Add reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
