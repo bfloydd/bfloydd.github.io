@@ -234,8 +234,16 @@ class FlappyBird {
         this.titleLogoImg.onload = () => {
             this.titleLogoLoaded = true;
         };
-        this.titleLogoImg.src = 'images/title_logo.png';
+        this.titleLogoImg.src = 'images/title/title_logo.png';
         this.titleLogoLoaded = false;
+        
+        // Add title flatchy image
+        this.titleFlatchyImg = new Image();
+        this.titleFlatchyImg.onload = () => {
+            this.titleFlatchyLoaded = true;
+        };
+        this.titleFlatchyImg.src = 'images/title/title_flatchy.png';
+        this.titleFlatchyLoaded = false;
         
         this.gameLoopStarted = false;
         this.bindEvents();
@@ -247,7 +255,7 @@ class FlappyBird {
             cloud.onload = () => {
                 cloud.loaded = true;
             };
-            cloud.src = `images/cloud_0${i}.png`;
+            cloud.src = `images/clouds/cloud_0${i}.png`;
             cloud.loaded = false;
             this.clouds.push(cloud);
         }
@@ -272,6 +280,14 @@ class FlappyBird {
                 alpha: 0
             }
         };
+
+        // Load title background
+        this.titleBgImg = new Image();
+        this.titleBgImg.onload = () => {
+            this.titleBgLoaded = true;
+        };
+        this.titleBgImg.src = 'images/title/title_bg.png';
+        this.titleBgLoaded = false;
     }
     
     init() {
@@ -710,10 +726,6 @@ class FlappyBird {
             return;
         }
         
-        // Paint sky background
-        this.ctx.fillStyle = '#87CEEB';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        
         // Draw background with proper scaling
         if (this.backgroundLoaded) {
             const scale = Math.max(
@@ -1077,13 +1089,27 @@ class FlappyBird {
 
     // Add new method for drawing title screen
     drawTitleScreen() {
-        // Draw background gradient
-        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
-        gradient.addColorStop(0, '#87CEEB');    // Sky blue at top
-        gradient.addColorStop(1, '#4A90E2');    // Deeper blue at bottom
-        
-        this.ctx.fillStyle = gradient;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // Draw background image if loaded
+        if (this.titleBgLoaded) {
+            // Keep original aspect ratio and position at bottom
+            const bgWidth = this.canvas.width;
+            const bgHeight = this.canvas.height * 0.4;
+            const bgY = this.canvas.height - bgHeight;
+            
+            this.ctx.drawImage(
+                this.titleBgImg,
+                0, bgY,
+                bgWidth,
+                bgHeight
+            );
+        } else {
+            // Fallback to gradient if image isn't loaded
+            const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+            gradient.addColorStop(0, '#87CEEB');
+            gradient.addColorStop(1, '#4A90E2');
+            this.ctx.fillStyle = gradient;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
         
         // Draw decorative clouds if loaded
         this.clouds.forEach((cloud, index) => {
@@ -1124,34 +1150,42 @@ class FlappyBird {
             );
         }
         
+        // Draw title flatchy
+        if (this.titleFlatchyLoaded) {
+            const flatchyWidth = this.canvas.width * 0.4; // 40% of canvas width
+            const aspectRatio = this.titleFlatchyImg.height / this.titleFlatchyImg.width;
+            const flatchyHeight = flatchyWidth * aspectRatio;
+            const flatchyX = (this.canvas.width - flatchyWidth) / 2;
+            const flatchyY = this.canvas.height * 0.48; // Position between logo and button
+            
+            // Add floating animation
+            const float = Math.sin(Date.now() / 800) * 8; // Gentle floating motion
+            
+            this.ctx.drawImage(
+                this.titleFlatchyImg,
+                flatchyX,
+                flatchyY + float,
+                flatchyWidth,
+                flatchyHeight
+            );
+        }
+        
         if (this.startBtnLoaded) {
             // Setup start button
             const btn = this.titleScreenElements.startButton;
             btn.width = this.canvas.width * 0.5;
             btn.height = btn.width * (this.startBtnImg.height / this.startBtnImg.width);
             btn.x = (this.canvas.width - btn.width) / 2;
-            btn.y = this.canvas.height * 0.6;
+            btn.y = this.canvas.height * 0.7;
             
-            // Add button glow effect
-            this.ctx.shadowColor = '#FFD700';
-            this.ctx.shadowBlur = 20;
-            
-            // Draw button with pulse effect
-            const pulse = 1 + Math.sin(Date.now() / 500) * 0.03;
-            const pulseWidth = btn.width * pulse;
-            const pulseHeight = btn.height * pulse;
-            const pulseX = btn.x - (pulseWidth - btn.width) / 2;
-            const pulseY = btn.y - (pulseHeight - btn.height) / 2;
-            
+            // Draw button without animation
             this.ctx.drawImage(
                 this.startBtnImg,
-                pulseX,
-                pulseY,
-                pulseWidth,
-                pulseHeight
+                btn.x,
+                btn.y,
+                btn.width,
+                btn.height
             );
-            
-            this.ctx.shadowBlur = 0;
         }
     }
 } 
