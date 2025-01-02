@@ -89,19 +89,23 @@ class FlappyBird {
         this.pillarSpaceIncreasePerLevel = .05;
         
         this.canvas = document.createElement('canvas');
-        this.canvas.width = 800;
-        this.canvas.height = 600;
+        
+        // Set mobile-friendly dimensions
+        const aspectRatio = 9/16; // Common mobile aspect ratio
+        this.canvas.width = 400; // Base width for mobile
+        this.canvas.height = this.canvas.width / aspectRatio;
+        
         document.body.appendChild(this.canvas);
         this.ctx = this.canvas.getContext('2d');
         
         // Setup bird physics
         this.bird = {
-            x: 50,
-            y: 200,
+            x: this.canvas.width * 0.2,
+            y: this.canvas.height * 0.4,
             velocity: 0,
-            gravity: 0.2,
-            jump: -4.5,
-            size: 48
+            gravity: this.canvas.height * 0.0004,
+            jump: this.canvas.height * -0.012,
+            size: this.canvas.width * 0.12
         };
         
         // Setup game speed and obstacles
@@ -109,8 +113,8 @@ class FlappyBird {
         this.currentSpeed = this.baseSpeed * (1 + (this.startingLevel - 1) * this.speedIncreasePerLevel);
         
         this.pipes = [];
-        this.pipeWidth = 60;
-        this.pipeGap = 150;
+        this.pipeWidth = this.canvas.width * 0.15;
+        this.pipeGap = this.canvas.height * 0.25;
         this.pipeInterval = 2000;
         this.lastPipe = 0;
         
@@ -122,17 +126,17 @@ class FlappyBird {
         
         // Setup UI elements
         this.startButton = {
-            x: this.canvas.width / 2 - 100,
-            y: this.canvas.height / 2 + 30,
-            width: 200,
-            height: 50
+            x: this.canvas.width * 0.25,
+            y: this.canvas.height * 0.6,
+            width: this.canvas.width * 0.5,
+            height: this.canvas.height * 0.1
         };
         
         this.restartButton = {
-            x: this.canvas.width / 2 - 100,
-            y: this.canvas.height / 2 + 30,
-            width: 200,
-            height: 50
+            x: this.canvas.width * 0.25,
+            y: this.canvas.height * 0.6,
+            width: this.canvas.width * 0.5,
+            height: this.canvas.height * 0.1
         };
         
         // Setup ambient effects
@@ -149,10 +153,10 @@ class FlappyBird {
         // Setup level completion UI
         this.levelComplete = false;
         this.continueButton = {
-            x: this.canvas.width / 2 - 150,
-            y: this.canvas.height / 2 + 100,
-            width: 300,
-            height: 60
+            x: this.canvas.width * 0.25,
+            y: this.canvas.height * 0.6,
+            width: this.canvas.width * 0.5,
+            height: this.canvas.height * 0.1
         };
         
         // Setup victory effects
@@ -247,6 +251,27 @@ class FlappyBird {
             cloud.loaded = false;
             this.clouds.push(cloud);
         }
+
+        // Add title screen state
+        this.isOnTitleScreen = true; // New state to track if we're on title screen
+        this.titleScreenAlpha = 1; // For fade transition
+        this.titleScreenElements = {
+            logo: {
+                width: 0,
+                height: 0,
+                x: 0,
+                y: 0,
+                scale: 0,
+                targetScale: 1
+            },
+            startButton: {
+                width: 0,
+                height: 0,
+                x: 0,
+                y: 0,
+                alpha: 0
+            }
+        };
     }
     
     init() {
@@ -265,6 +290,10 @@ class FlappyBird {
     bindEvents() {
         const handleInput = () => {
             if (!this.spriteLoaded) return;
+            if (this.isOnTitleScreen) {
+                this.startGameFromTitle();
+                return;
+            }
             if (!this.gameStarted) {
                 this.gameStarted = true;
             }
@@ -275,6 +304,17 @@ class FlappyBird {
             const rect = this.canvas.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
             const clickY = e.clientY - rect.top;
+            
+            if (this.isOnTitleScreen) {
+                const btn = this.titleScreenElements.startButton;
+                if (clickX >= btn.x && 
+                    clickX <= btn.x + btn.width &&
+                    clickY >= btn.y && 
+                    clickY <= btn.y + btn.height) {
+                    this.startGameFromTitle();
+                }
+                return;
+            }
             
             if (this.levelComplete) {
                 if (clickX >= this.continueButton.x && 
@@ -320,12 +360,12 @@ class FlappyBird {
     restart() {
         // Reset bird position and physics
         this.bird = {
-            x: 50,
-            y: 200,
+            x: this.canvas.width * 0.2,
+            y: this.canvas.height * 0.4,
             velocity: 0,
-            gravity: 0.2,
-            jump: -4.5,
-            size: 48
+            gravity: this.canvas.height * 0.0004,
+            jump: this.canvas.height * -0.012,
+            size: this.canvas.width * 0.12
         };
         this.pipes = [];
         this.lastPipe = 0;
@@ -580,12 +620,12 @@ class FlappyBird {
         
         // Reset game state
         this.bird = {
-            x: 50,
-            y: 200,
+            x: this.canvas.width * 0.2,
+            y: this.canvas.height * 0.4,
             velocity: 0,
-            gravity: 0.2,
-            jump: -4.5,
-            size: 48
+            gravity: this.canvas.height * 0.0004,
+            jump: this.canvas.height * -0.012,
+            size: this.canvas.width * 0.12
         };
         this.pipes = [];
         this.lastPipe = 0;
@@ -661,6 +701,14 @@ class FlappyBird {
     
     draw() {
         if (!this.spriteLoaded) return;
+        
+        // Clear canvas
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        if (this.isOnTitleScreen) {
+            this.drawTitleScreen();
+            return;
+        }
         
         // Paint sky background
         this.ctx.fillStyle = '#87CEEB';
@@ -814,7 +862,7 @@ class FlappyBird {
         if (this.gameStarted && !this.gameOver) {
             // Draw HUD
             this.ctx.fillStyle = '#fff';
-            this.ctx.font = `bold 24px ${this.gameFont}`;
+            this.ctx.font = `bold ${this.canvas.width * 0.06}px ${this.gameFont}`;
             this.ctx.textAlign = 'right';
             this.ctx.strokeStyle = '#000';
             this.ctx.lineWidth = 4;
@@ -849,7 +897,7 @@ class FlappyBird {
             this.ctx.fillStyle = '#FFFFFF';
             this.ctx.strokeStyle = '#000000';
             this.ctx.lineWidth = 3;
-            this.ctx.font = `bold 36px ${this.gameFont}`;
+            this.ctx.font = `bold ${this.canvas.width * 0.09}px ${this.gameFont}`;
             this.ctx.textAlign = 'center';
             this.ctx.strokeText(`Score: ${this.score}`, this.canvas.width / 2, this.canvas.height / 3 + 60);
             this.ctx.fillText(`Score: ${this.score}`, this.canvas.width / 2, this.canvas.height / 3 + 60);
@@ -874,52 +922,13 @@ class FlappyBird {
                 );
 
                 this.ctx.fillStyle = '#000000';
-                this.ctx.font = `bold 24px ${this.gameFont}`;
+                this.ctx.font = `bold ${this.canvas.width * 0.06}px ${this.gameFont}`;
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 this.ctx.fillText(
                     'Try again',
                     this.restartButton.x + (btnWidth/2),
                     this.restartButton.y + (btnHeight/2) + 2
-                );
-            }
-        }
-        
-        if (!this.gameStarted) {
-            // Draw title screen
-            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            
-            if (this.titleLogoLoaded) {
-                const logoWidth = 400;
-                const aspectRatio = this.titleLogoImg.height / this.titleLogoImg.width;
-                const logoHeight = logoWidth * aspectRatio;
-                
-                this.ctx.drawImage(
-                    this.titleLogoImg,
-                    (this.canvas.width - logoWidth) / 2,
-                    this.canvas.height / 3 - 60,
-                    logoWidth,
-                    logoHeight
-                );
-            }
-            
-            if (this.startBtnLoaded) {
-                const btnWidth = 200;
-                const aspectRatio = this.startBtnImg.height / this.startBtnImg.width;
-                const btnHeight = btnWidth * aspectRatio;
-                
-                this.startButton.width = btnWidth;
-                this.startButton.height = btnHeight;
-                this.startButton.x = (this.canvas.width - btnWidth) / 2;
-                this.startButton.y = this.canvas.height / 2 + 30;
-                
-                this.ctx.drawImage(
-                    this.startBtnImg,
-                    this.startButton.x,
-                    this.startButton.y,
-                    btnWidth,
-                    btnHeight
                 );
             }
         }
@@ -966,12 +975,12 @@ class FlappyBird {
             this.ctx.fillStyle = '#FFFFFF';
             this.ctx.strokeStyle = '#000000';
             this.ctx.lineWidth = 3;
-            this.ctx.font = `bold 52px ${this.gameFont}`;
+            this.ctx.font = `bold ${this.canvas.width * 0.06}px ${this.gameFont}`;
             this.ctx.textAlign = 'center';
             this.ctx.strokeText(`LEVEL ${this.currentLevel}`, this.canvas.width / 2, this.canvas.height / 3 - 40);
             this.ctx.fillText(`LEVEL ${this.currentLevel}`, this.canvas.width / 2, this.canvas.height / 3 - 40);
             
-            this.ctx.font = `bold 48px ${this.gameFont}`;
+            this.ctx.font = `bold ${this.canvas.width * 0.06}px ${this.gameFont}`;
             this.ctx.strokeText('COMPLETE!', this.canvas.width / 2, this.canvas.height / 3 + 20);
             this.ctx.fillText('COMPLETE!', this.canvas.width / 2, this.canvas.height / 3 + 20);
             
@@ -995,7 +1004,7 @@ class FlappyBird {
                 );
 
                 this.ctx.fillStyle = '#000000';
-                this.ctx.font = `bold 24px ${this.gameFont}`;
+                this.ctx.font = `bold ${this.canvas.width * 0.06}px ${this.gameFont}`;
                 this.ctx.textAlign = 'center';
                 this.ctx.textBaseline = 'middle';
                 this.ctx.fillText(
@@ -1043,11 +1052,106 @@ class FlappyBird {
         
         // Add glowing text
         this.ctx.fillStyle = '#fff';
-        this.ctx.font = `bold 24px ${this.gameFont}`;
+        this.ctx.font = `bold ${this.canvas.width * 0.06}px ${this.gameFont}`;
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         this.ctx.fillText(text, x + width/2, y + height/2);
         
         this.ctx.restore();
+    }
+
+    // Add new method to handle title screen transition
+    startGameFromTitle() {
+        // Fade out title screen
+        const fadeOut = () => {
+            this.titleScreenAlpha -= 0.05;
+            if (this.titleScreenAlpha > 0) {
+                requestAnimationFrame(fadeOut);
+            } else {
+                this.isOnTitleScreen = false;
+                this.gameStarted = true;
+            }
+        };
+        fadeOut();
+    }
+
+    // Add new method for drawing title screen
+    drawTitleScreen() {
+        // Draw background gradient
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+        gradient.addColorStop(0, '#87CEEB');    // Sky blue at top
+        gradient.addColorStop(1, '#4A90E2');    // Deeper blue at bottom
+        
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Draw decorative clouds if loaded
+        this.clouds.forEach((cloud, index) => {
+            if (cloud.loaded) {
+                const cloudWidth = this.canvas.width * 0.3;
+                const aspectRatio = cloud.height / cloud.width;
+                const cloudHeight = cloudWidth * aspectRatio;
+                
+                const x = (index * (this.canvas.width / 3)) - 50;
+                const y = (index % 2) * this.canvas.height * 0.2;
+                
+                this.ctx.globalAlpha = 0.8;
+                this.ctx.drawImage(cloud, x, y, cloudWidth, cloudHeight);
+                this.ctx.globalAlpha = 1;
+            }
+        });
+        
+        // Apply fade effect
+        this.ctx.fillStyle = `rgba(0, 0, 0, ${1 - this.titleScreenAlpha})`;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        if (this.titleLogoLoaded) {
+            // Animate logo
+            const logo = this.titleScreenElements.logo;
+            logo.width = this.canvas.width * 0.8;
+            logo.height = logo.width * (this.titleLogoImg.height / this.titleLogoImg.width);
+            logo.x = (this.canvas.width - logo.width) / 2;
+            logo.y = this.canvas.height * 0.35;
+            
+            // Draw logo with slight bounce effect
+            const bounce = Math.sin(Date.now() / 1000) * 5;
+            this.ctx.drawImage(
+                this.titleLogoImg,
+                logo.x,
+                logo.y + bounce,
+                logo.width,
+                logo.height
+            );
+        }
+        
+        if (this.startBtnLoaded) {
+            // Setup start button
+            const btn = this.titleScreenElements.startButton;
+            btn.width = this.canvas.width * 0.5;
+            btn.height = btn.width * (this.startBtnImg.height / this.startBtnImg.width);
+            btn.x = (this.canvas.width - btn.width) / 2;
+            btn.y = this.canvas.height * 0.6;
+            
+            // Add button glow effect
+            this.ctx.shadowColor = '#FFD700';
+            this.ctx.shadowBlur = 20;
+            
+            // Draw button with pulse effect
+            const pulse = 1 + Math.sin(Date.now() / 500) * 0.03;
+            const pulseWidth = btn.width * pulse;
+            const pulseHeight = btn.height * pulse;
+            const pulseX = btn.x - (pulseWidth - btn.width) / 2;
+            const pulseY = btn.y - (pulseHeight - btn.height) / 2;
+            
+            this.ctx.drawImage(
+                this.startBtnImg,
+                pulseX,
+                pulseY,
+                pulseWidth,
+                pulseHeight
+            );
+            
+            this.ctx.shadowBlur = 0;
+        }
     }
 } 
