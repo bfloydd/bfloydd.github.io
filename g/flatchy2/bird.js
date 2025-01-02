@@ -288,6 +288,14 @@ class FlappyBird {
         };
         this.titleBgImg.src = 'images/title/title_bg.png';
         this.titleBgLoaded = false;
+
+        // Load sky background
+        this.skyBgImg = new Image();
+        this.skyBgImg.onload = () => {
+            this.skyBgLoaded = true;
+        };
+        this.skyBgImg.src = 'images/sky_bg.png';
+        this.skyBgLoaded = false;
     }
     
     init() {
@@ -726,6 +734,16 @@ class FlappyBird {
             return;
         }
         
+        // Draw sky background first
+        if (this.skyBgLoaded) {
+            this.ctx.drawImage(
+                this.skyBgImg,
+                0, 0,
+                this.canvas.width,
+                this.canvas.height
+            );
+        }
+        
         // Draw background with proper scaling
         if (this.backgroundLoaded) {
             const scale = Math.max(
@@ -1089,9 +1107,25 @@ class FlappyBird {
 
     // Add new method for drawing title screen
     drawTitleScreen() {
-        // Draw background image if loaded
+        // Draw sky background first if loaded
+        if (this.skyBgLoaded) {
+            this.ctx.drawImage(
+                this.skyBgImg,
+                0, 0,
+                this.canvas.width,
+                this.canvas.height
+            );
+        } else {
+            // Fallback to gradient if sky image isn't loaded
+            const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+            gradient.addColorStop(0, '#87CEEB');
+            gradient.addColorStop(1, '#4A90E2');
+            this.ctx.fillStyle = gradient;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+        
+        // Draw title background image if loaded
         if (this.titleBgLoaded) {
-            // Keep original aspect ratio and position at bottom
             const bgWidth = this.canvas.width;
             const bgHeight = this.canvas.height * 0.4;
             const bgY = this.canvas.height - bgHeight;
@@ -1102,13 +1136,6 @@ class FlappyBird {
                 bgWidth,
                 bgHeight
             );
-        } else {
-            // Fallback to gradient if image isn't loaded
-            const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
-            gradient.addColorStop(0, '#87CEEB');
-            gradient.addColorStop(1, '#4A90E2');
-            this.ctx.fillStyle = gradient;
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
         
         // Draw decorative clouds if loaded
