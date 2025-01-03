@@ -348,6 +348,9 @@ class FlappyBird {
         // Setup fart sound timer for ambient sounds
         this.lastFartTime = 0;
         this.fartInterval = 2000 + Math.random() * 3000;
+
+        // Setup feather particle system
+        this.featherParticles = [];
     }
     
     init() {
@@ -383,6 +386,8 @@ class FlappyBird {
                         const randomIndex = Math.floor(Math.random() * this.fartSounds.length);
                         this.fartSounds[randomIndex].currentTime = 0; // Reset sound to start
                         this.fartSounds[randomIndex].play();
+                        // Create feather burst when tooting
+                        this.createFeatherBurst();
                     } else {
                         // Play whoosh sound
                         this.whooshSound.currentTime = 0; // Reset sound to start
@@ -529,6 +534,26 @@ class FlappyBird {
         
         // Remove off-screen pipes
         this.pipes = this.pipes.filter(pipe => pipe.x + this.pipeWidth > 0);
+
+        // Update feather particles
+        this.featherParticles = this.featherParticles.filter(particle => {
+            // Update position
+            particle.x += particle.speedX;
+            particle.y += particle.speedY;
+            particle.speedY += particle.gravity;
+            
+            // Update rotation
+            particle.rotation += particle.rotationSpeed;
+            
+            // Add some horizontal wobble
+            particle.x += Math.sin(Date.now() / 500 + particle.rotation) * 0.5;
+            
+            // Fade out
+            particle.opacity -= 0.005;
+            
+            // Keep particle if it's still visible
+            return particle.opacity > 0;
+        });
     }
     
     startLevel(levelNumber) {
@@ -612,6 +637,7 @@ class FlappyBird {
             case this.GameState.READY:
                 this.drawGameBackground();
                 this.drawBird();
+                this.drawFeatherParticles();
                 this.drawReadyOverlay();
                 break;
                 
@@ -619,6 +645,7 @@ class FlappyBird {
                 this.drawGameBackground();
                 this.drawPipes();
                 this.drawBird();
+                this.drawFeatherParticles();
                 this.drawHUD();
                 break;
                 
@@ -626,6 +653,7 @@ class FlappyBird {
                 this.drawGameBackground();
                 this.drawPipes();
                 this.drawBird();
+                this.drawFeatherParticles();
                 this.drawGameOverOverlay();
                 break;
         }
@@ -1061,5 +1089,75 @@ class FlappyBird {
                 this.restartButton.y + (btnHeight/2)
             );
         }
+    }
+
+    // Add new method to create feather particles
+    createFeatherBurst() {
+        const featherImages = [];
+        
+        // Only add feathers that are loaded
+        if (this.feather1Loaded) featherImages.push(this.feather1);
+        if (this.feather2Loaded) featherImages.push(this.feather2);
+        if (this.feather3Loaded) featherImages.push(this.feather3);
+        if (this.feather4Loaded) featherImages.push(this.feather4);
+        
+        // Only create particles if we have loaded feather images
+        if (featherImages.length > 0) {
+            const numFeathers = 4;
+            
+            for (let i = 0; i < numFeathers; i++) {
+                // Randomly select a feather image
+                const randomFeather = featherImages[Math.floor(Math.random() * featherImages.length)];
+                
+                // Calculate spawn position at bird's rear
+                const spawnX = this.bird.x - this.bird.size * 0.2; // Slightly behind the bird
+                const spawnY = this.bird.y + this.bird.size * 0.5; // Center height of bird
+                
+                // Calculate burst velocity
+                const burstSpeed = 3 + Math.random() * 2;
+                const angle = Math.PI + (Math.random() * 0.5 - 0.25); // Spread angle behind bird
+                const speedX = Math.cos(angle) * burstSpeed;
+                const speedY = Math.sin(angle) * burstSpeed;
+                
+                // Create particle with burst properties
+                const particle = {
+                    img: randomFeather,
+                    x: spawnX,
+                    y: spawnY,
+                    size: this.bird.size * (0.15 + Math.random() * 0.15), // Slightly smaller size
+                    speedX: speedX,
+                    speedY: speedY,
+                    rotation: Math.random() * Math.PI * 2,
+                    rotationSpeed: (Math.random() - 0.5) * 0.2,
+                    gravity: 0.1,
+                    opacity: 1
+                };
+                
+                this.featherParticles.push(particle);
+            }
+        }
+    }
+
+    // Remove feather particle drawing from drawBird method and create new method
+    drawFeatherParticles() {
+        this.featherParticles.forEach(particle => {
+            this.ctx.save();
+            this.ctx.globalAlpha = particle.opacity;
+            
+            // Move to particle position and apply rotation
+            this.ctx.translate(particle.x + particle.size/2, particle.y + particle.size/2);
+            this.ctx.rotate(particle.rotation);
+            
+            // Draw the feather
+            this.ctx.drawImage(
+                particle.img,
+                -particle.size/2,
+                -particle.size/2,
+                particle.size,
+                particle.size
+            );
+            
+            this.ctx.restore();
+        });
     }
 } 
