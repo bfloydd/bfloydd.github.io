@@ -58,28 +58,28 @@ class FlappyBird {
         this.feather1.onload = () => {
             this.feather1Loaded = true;
         };
-        this.feather1.src = 'images/feather_1.png';
+        this.feather1.src = 'images/flatchy/feather_1.png';
         this.feather1Loaded = false;
 
         this.feather2 = new Image();
         this.feather2.onload = () => {
             this.feather2Loaded = true;
         };
-        this.feather2.src = 'images/feather_2.png';
+        this.feather2.src = 'images/flatchy/feather_2.png';
         this.feather2Loaded = false;
 
         this.feather3 = new Image();
         this.feather3.onload = () => {
             this.feather3Loaded = true;
         };
-        this.feather3.src = 'images/feather_3.png';
+        this.feather3.src = 'images/flatchy/feather_3.png';
         this.feather3Loaded = false;
 
         this.feather4 = new Image();
         this.feather4.onload = () => {
             this.feather4Loaded = true;
         };
-        this.feather4.src = 'images/feather_4.png';
+        this.feather4.src = 'images/flatchy/feather_4.png';
         this.feather4Loaded = false;
 
         this.spriteLoaded = false;
