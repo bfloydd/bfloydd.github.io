@@ -296,6 +296,33 @@ class FlappyBird {
         };
         this.skyBgImg.src = 'images/sky_bg.png';
         this.skyBgLoaded = false;
+
+        // Add ready state
+        this.isReadyState = false;
+        
+        // Load tap icon
+        this.tapIconImg = new Image();
+        this.tapIconImg.onload = () => {
+            this.tapIconLoaded = true;
+        };
+        this.tapIconImg.src = 'images/tap_icon.png';
+        this.tapIconLoaded = false;
+        
+        // Load get ready text
+        this.getReadyImg = new Image();
+        this.getReadyImg.onload = () => {
+            this.getReadyLoaded = true;
+        };
+        this.getReadyImg.src = 'images/game/get_ready_text.png';
+        this.getReadyLoaded = false;
+
+        // Load tap text
+        this.tapTextImg = new Image();
+        this.tapTextImg.onload = () => {
+            this.tapTextLoaded = true;
+        };
+        this.tapTextImg.src = 'images/game/tap_text.png';
+        this.tapTextLoaded = false;
     }
     
     init() {
@@ -316,6 +343,11 @@ class FlappyBird {
             if (!this.spriteLoaded) return;
             if (this.isOnTitleScreen) {
                 this.startGameFromTitle();
+                return;
+            }
+            if (this.isReadyState) {
+                this.isReadyState = false;
+                this.gameStarted = true;
                 return;
             }
             if (!this.gameStarted) {
@@ -415,15 +447,16 @@ class FlappyBird {
     }
     
     update() {
-        if (!this.gameStarted || this.gameOver || this.levelComplete) return;
-        
-        // Update animation frames
+        // Update animation frames even in ready state
         const currentTime = Date.now();
         if (currentTime - this.spriteAnimation.lastFrameTime > this.spriteAnimation.frameInterval) {
             this.spriteAnimation.currentFrame = (this.spriteAnimation.currentFrame + 1) % this.spriteAnimation.totalFrames;
             this.spriteAnimation.lastFrameTime = currentTime;
         }
 
+        // Return early if not in active gameplay
+        if (!this.gameStarted || this.gameOver || this.levelComplete || this.isReadyState) return;
+        
         // Scroll ground texture
         if (this.groundLoaded) {
             this.groundOffset -= this.currentSpeed;
@@ -803,92 +836,107 @@ class FlappyBird {
             );
         }
         
-        if (this.gameStarted) {
-            this.ctx.save();
-            
-            // Tilt bird based on velocity
-            let rotation = 0;
+        // Draw trees/pipes (only once, and not in ready state)
+        if (!this.isReadyState) {
+            this.pipes.forEach(pipe => {
+                if (this.treeLoaded) {
+                    // Draw bottom tree
+                    this.ctx.drawImage(
+                        this.treeImg,
+                        0, 0,
+                        this.treeImg.width, this.treeImg.height,
+                        pipe.x + 1, pipe.y + this.pipeGap,
+                        this.pipeWidth, this.canvas.height - (pipe.y + this.pipeGap)
+                    );
+                    
+                    // Draw top tree (flipped)
+                    this.ctx.save();
+                    this.ctx.translate(pipe.x + this.pipeWidth/2, pipe.y);
+                    this.ctx.scale(1, -1);
+                    this.ctx.drawImage(
+                        this.treeImg,
+                        0, 0,
+                        this.treeImg.width, this.treeImg.height,
+                        -this.pipeWidth/2 + 1, 0,
+                        this.pipeWidth, pipe.y
+                    );
+                    this.ctx.restore();
+                }
+            });
+        }
+        
+        // Always draw the bird (whether in ready state or not)
+        // Draw bird sprite with animation
+        this.ctx.save();
+        
+        // Tilt bird based on velocity (only if game is started)
+        let rotation = 0;
+        if (this.gameStarted && !this.isReadyState) {
             if (this.bird.velocity < 0) {
                 rotation = -0.2;
             } else if (this.bird.velocity > 0) {
                 rotation = 0.2;
             }
-            
-            // Draw feather trail
-            this.ctx.save();
-            this.ctx.translate(this.bird.x + this.bird.size/2, this.bird.y + this.bird.size/2);
-            this.ctx.rotate(rotation);
-            
-            if (this.feather1Loaded) {
-                this.ctx.globalAlpha = 0.8;
-                this.ctx.drawImage(
-                    this.feather1,
-                    -8 - this.bird.size/3, -this.bird.size/3,
-                    this.bird.size/4, this.bird.size/4
-                );
-            }
-            
-            if (this.feather2Loaded) {
-                this.ctx.globalAlpha = 0.6;
-                this.ctx.drawImage(
-                    this.feather2,
-                    -20 - this.bird.size/3, -this.bird.size/3,
-                    this.bird.size/4.5, this.bird.size/4.5
-                );
-            }
-            
-            if (this.feather3Loaded) {
-                this.ctx.globalAlpha = 0.4;
-                this.ctx.drawImage(
-                    this.feather3,
-                    -32 - this.bird.size/3, -this.bird.size/3,
-                    this.bird.size/5, this.bird.size/5
-                );
-            }
-
-            if (this.feather4Loaded) {
-                this.ctx.globalAlpha = 0.2;
-                this.ctx.drawImage(
-                    this.feather4,
-                    -44 - this.bird.size/3, -this.bird.size/3,
-                    this.bird.size/5.5, this.bird.size/5.5
-                );
-            }
-            
-            this.ctx.globalAlpha = 1.0;
-            this.ctx.restore();
-            
-            // Draw bird sprite
-            this.ctx.save();
-            this.ctx.translate(this.bird.x + this.bird.size/2, this.bird.y + this.bird.size/2);
-            this.ctx.rotate(rotation);
-            
-            // Select sprite frame
-            let column, row;
-            if (this.gameOver) {
-                column = 5;
-                row = 1;
-            } else {
-                column = this.spriteAnimation.currentFrame % this.spriteAnimation.framesPerRow;
-                row = Math.floor(this.spriteAnimation.currentFrame / this.spriteAnimation.framesPerRow);
-            }
-            
-            this.ctx.drawImage(
-                this.birdSprite,
-                column * this.spriteAnimation.frameWidth,
-                row * this.spriteAnimation.frameHeight,
-                this.spriteAnimation.frameWidth,
-                this.spriteAnimation.frameHeight,
-                -this.bird.size/2,
-                -this.bird.size/2,
-                this.bird.size,
-                this.bird.size
-            );
-            
-            this.ctx.restore();
-            this.ctx.restore();
         }
         
+        this.ctx.translate(this.bird.x + this.bird.size/2, this.bird.y + this.bird.size/2);
+        this.ctx.rotate(rotation);
+        
+        // Select sprite frame
+        let column = this.spriteAnimation.currentFrame % this.spriteAnimation.framesPerRow;
+        let row = Math.floor(this.spriteAnimation.currentFrame / this.spriteAnimation.framesPerRow);
+        
+        this.ctx.drawImage(
+            this.birdSprite,
+            column * this.spriteAnimation.frameWidth,
+            row * this.spriteAnimation.frameHeight,
+            this.spriteAnimation.frameWidth,
+            this.spriteAnimation.frameHeight,
+            -this.bird.size/2,
+            -this.bird.size/2,
+            this.bird.size,
+            this.bird.size
+        );
+        
+        this.ctx.restore();
+
+        // Draw ready state overlay above the bird
+        if (this.isReadyState) {
+            // Draw "GET READY!" text
+            if (this.getReadyLoaded) {
+                const textWidth = this.canvas.width * 0.7;
+                const aspectRatio = this.getReadyImg.height / this.getReadyImg.width;
+                const textHeight = textWidth * aspectRatio;
+                
+                this.ctx.drawImage(
+                    this.getReadyImg,
+                    (this.canvas.width - textWidth) / 2,
+                    this.canvas.height * 0.25,
+                    textWidth,
+                    textHeight
+                );
+            }
+            
+            // Draw tap text next to bird
+            if (this.tapTextLoaded) {
+                const tapWidth = this.canvas.width * 0.2; // 20% of canvas width
+                const aspectRatio = this.tapTextImg.height / this.tapTextImg.width;
+                const tapHeight = tapWidth * aspectRatio;
+                
+                // Position to the right of the bird
+                const tapX = this.bird.x + this.bird.size + (this.canvas.width * 0.05); // 5% padding
+                const tapY = this.bird.y + (this.bird.size / 2) - (tapHeight / 2); // Vertically center with bird
+                
+                this.ctx.drawImage(
+                    this.tapTextImg,
+                    tapX,
+                    tapY,
+                    tapWidth,
+                    tapHeight
+                );
+            }
+        }
+
         if (this.gameStarted && !this.gameOver) {
             // Draw HUD
             this.ctx.fillStyle = '#fff';
@@ -1044,6 +1092,27 @@ class FlappyBird {
                 );
             }
         }
+        
+        // Draw tap icon
+        if (this.tapIconLoaded) {
+            const iconWidth = this.canvas.width * 0.15;
+            const aspectRatio = this.tapIconImg.height / this.tapIconImg.width;
+            const iconHeight = iconWidth * aspectRatio;
+            
+            this.ctx.drawImage(
+                this.tapIconImg,
+                (this.canvas.width - iconWidth) / 2,
+                this.canvas.height * 0.45,
+                iconWidth,
+                iconHeight
+            );
+            
+            // Draw "Tap" text
+            this.ctx.fillStyle = '#000000';
+            this.ctx.font = `bold ${this.canvas.width * 0.06}px ${this.gameFont}`;
+            this.ctx.textAlign = 'left';
+            this.ctx.fillText('Tap', this.canvas.width * 0.6, this.canvas.height * 0.47);
+        }
     }
     
     // Main game loop
@@ -1099,7 +1168,7 @@ class FlappyBird {
                 requestAnimationFrame(fadeOut);
             } else {
                 this.isOnTitleScreen = false;
-                this.gameStarted = true;
+                this.isReadyState = true; // Go to ready state instead of starting game
             }
         };
         fadeOut();
