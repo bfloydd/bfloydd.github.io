@@ -333,6 +333,21 @@ class FlappyBird {
         };
         this.tapTextImg.src = 'images/game/tap_text.png';
         this.tapTextLoaded = false;
+
+        // Load whoosh sound
+        this.whooshSound = new Audio('audio/woosh.wav');
+        
+        // Load only existing fart sounds
+        this.fartSounds = [];
+        const existingGasSounds = [1, 3, 4, 7, 14, 15, 18, 19, 29, 30];
+        existingGasSounds.forEach(num => {
+            const sound = new Audio(`audio/toots/gas${num}.wav`);
+            this.fartSounds.push(sound);
+        });
+        
+        // Setup fart sound timer for ambient sounds
+        this.lastFartTime = 0;
+        this.fartInterval = 2000 + Math.random() * 3000;
     }
     
     init() {
@@ -361,6 +376,18 @@ class FlappyBird {
                     break;
                 case this.GameState.PLAYING:
                     this.bird.velocity = this.bird.jump;
+                    
+                    // Play either whoosh or fart sound (35% chance for fart)
+                    if (Math.random() < 0.35) {
+                        // Play random fart sound
+                        const randomIndex = Math.floor(Math.random() * this.fartSounds.length);
+                        this.fartSounds[randomIndex].currentTime = 0; // Reset sound to start
+                        this.fartSounds[randomIndex].play();
+                    } else {
+                        // Play whoosh sound
+                        this.whooshSound.currentTime = 0; // Reset sound to start
+                        this.whooshSound.play();
+                    }
                     break;
                 case this.GameState.END:
                     this.setState(this.GameState.READY);
