@@ -1179,14 +1179,14 @@ class FlappyBird {
         
         // Draw title flatchy
         if (this.titleFlatchyLoaded) {
-            const flatchyWidth = this.canvas.width * 0.4; // 40% of canvas width
+            const flatchyWidth = this.canvas.width * 0.4;
             const aspectRatio = this.titleFlatchyImg.height / this.titleFlatchyImg.width;
             const flatchyHeight = flatchyWidth * aspectRatio;
-            const flatchyX = (this.canvas.width - flatchyWidth) / 2;
-            const flatchyY = this.canvas.height * 0.48; // Position between logo and button
+            const flatchyX = (this.canvas.width - flatchyWidth) / 2 - (this.canvas.width * 0.05);
+            const flatchyY = this.canvas.height * 0.7;
             
             // Add floating animation
-            const float = Math.sin(Date.now() / 800) * 8; // Gentle floating motion
+            const float = Math.sin(Date.now() / 800) * 8;
             
             this.ctx.drawImage(
                 this.titleFlatchyImg,
@@ -1203,7 +1203,7 @@ class FlappyBird {
             btn.width = this.canvas.width * 0.5;
             btn.height = btn.width * (this.startBtnImg.height / this.startBtnImg.width);
             btn.x = (this.canvas.width - btn.width) / 2;
-            btn.y = this.canvas.height * 0.7;
+            btn.y = this.canvas.height * 0.48;
             
             // Draw button without animation
             this.ctx.drawImage(
