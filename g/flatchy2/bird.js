@@ -5,6 +5,7 @@ class FlappyBird {
             TITLE: 'title',
             READY: 'ready',
             PLAYING: 'playing',
+            DEAD: 'dead',
             END: 'end'
         };
         
@@ -466,11 +467,26 @@ class FlappyBird {
     }
     
     update() {
-        // Always update animation frames
-        const currentTime = Date.now();
-        if (currentTime - this.spriteAnimation.lastFrameTime > this.spriteAnimation.frameInterval) {
-            this.spriteAnimation.currentFrame = (this.spriteAnimation.currentFrame + 1) % this.spriteAnimation.totalFrames;
-            this.spriteAnimation.lastFrameTime = currentTime;
+        // Always update animation frames except in DEAD state
+        if (!this.isState(this.GameState.DEAD)) {
+            const currentTime = Date.now();
+            if (currentTime - this.spriteAnimation.lastFrameTime > this.spriteAnimation.frameInterval) {
+                this.spriteAnimation.currentFrame = (this.spriteAnimation.currentFrame + 1) % this.spriteAnimation.totalFrames;
+                this.spriteAnimation.lastFrameTime = currentTime;
+            }
+        }
+
+        if (this.isState(this.GameState.DEAD)) {
+            // Apply stronger gravity when dead
+            this.bird.velocity += this.bird.gravity * 1.5;
+            this.bird.y += this.bird.velocity;
+            
+            // Check ground collision
+            if (this.bird.y + this.bird.size > this.canvas.height - 50) {
+                this.bird.y = this.canvas.height - 50 - this.bird.size;
+                this.setState(this.GameState.END);
+            }
+            return;
         }
         
         // Only update game logic in PLAYING state
@@ -491,14 +507,14 @@ class FlappyBird {
         // Check ground collision
         if (this.bird.y + this.bird.size > this.canvas.height - 50) {
             this.bird.y = this.canvas.height - 50 - this.bird.size;
-            this.setState(this.GameState.END);
+            this.setState(this.GameState.DEAD);
             return;
         }
         
         // Check ceiling collision
         if (this.bird.y < 0) {
             this.bird.y = 0;
-            this.setState(this.GameState.END);
+            this.setState(this.GameState.DEAD);
             return;
         }
 
@@ -527,7 +543,7 @@ class FlappyBird {
             
             // Check for collisions
             if (this.checkCollision(pipe)) {
-                this.setState(this.GameState.END);
+                this.setState(this.GameState.DEAD);
                 return;
             }
         });
@@ -655,6 +671,14 @@ class FlappyBird {
                 this.drawBird();
                 this.drawFeatherParticles();
                 this.drawGameOverOverlay();
+                break;
+                
+            case this.GameState.DEAD:
+                this.drawGameBackground();
+                this.drawPipes();
+                this.drawBird();
+                this.drawFeatherParticles();
+                this.drawHUD();
                 break;
         }
     }
@@ -929,7 +953,7 @@ class FlappyBird {
     drawBird() {
         this.ctx.save();
         
-        // Tilt bird based on velocity (only if game is started)
+        // Tilt bird based on velocity and state
         let rotation = 0;
         if (this.isState(this.GameState.PLAYING)) {
             if (this.bird.velocity < 0) {
@@ -937,14 +961,24 @@ class FlappyBird {
             } else if (this.bird.velocity > 0) {
                 rotation = 0.2;
             }
+        } else if (this.isState(this.GameState.DEAD) || this.isState(this.GameState.END)) {
+            // Keep rotation for both DEAD and END states
+            rotation = Math.min(Math.PI / 2, this.bird.velocity * 0.1);
         }
         
         this.ctx.translate(this.bird.x + this.bird.size/2, this.bird.y + this.bird.size/2);
         this.ctx.rotate(rotation);
         
         // Select sprite frame
-        let column = this.spriteAnimation.currentFrame % this.spriteAnimation.framesPerRow;
-        let row = Math.floor(this.spriteAnimation.currentFrame / this.spriteAnimation.framesPerRow);
+        let column, row;
+        if (this.isState(this.GameState.DEAD) || this.isState(this.GameState.END)) {
+            // Use dead bird sprite frame for both DEAD and END states
+            column = 5;  // 6th column (0-based index)
+            row = 1;     // 2nd row (0-based index)
+        } else {
+            column = this.spriteAnimation.currentFrame % this.spriteAnimation.framesPerRow;
+            row = Math.floor(this.spriteAnimation.currentFrame / this.spriteAnimation.framesPerRow);
+        }
         
         this.ctx.drawImage(
             this.birdSprite,
