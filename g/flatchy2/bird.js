@@ -43,7 +43,7 @@ class FlappyBird {
         this.groundImg.onload = () => {
             this.groundLoaded = true;
         };
-        this.groundImg.src = 'images/ground.png';
+        this.groundImg.src = 'images/game/ground.png';
         this.groundLoaded = false;
         this.groundOffset = 0;
 
@@ -121,7 +121,7 @@ class FlappyBird {
         };
         
         // Setup game speed and obstacles
-        this.baseSpeed = 1.8;
+        this.baseSpeed = 4.5;
         this.currentSpeed = this.baseSpeed * (1 + (this.startingLevel - 1) * this.speedIncreasePerLevel);
         
         this.logs = [];
