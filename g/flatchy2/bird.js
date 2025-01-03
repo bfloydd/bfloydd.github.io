@@ -371,6 +371,19 @@ class FlappyBird {
         };
         this.playBtnImg.src = 'images/ui/btns/play_btn_up.png';
         this.playBtnLoaded = false;
+
+        // Add end screen animation properties
+        this.endScreenAnimation = {
+            bgStartY: -this.canvas.height * 0.5,
+            bgTargetY: this.canvas.height * 0.2,
+            bgCurrentY: -this.canvas.height * 0.5,
+            velocity: 0,
+            gravity: 0.8,
+            bounce: -0.3,
+            isAnimating: false,
+            startTime: 0,
+            animationDuration: 1000 // 1 second
+        };
     }
     
     init() {
@@ -912,7 +925,11 @@ class FlappyBird {
                 this.hitSound.play();
                 break;
             case this.GameState.END:
-                // Setup end state
+                // Reset and start end screen animation
+                this.endScreenAnimation.bgCurrentY = this.endScreenAnimation.bgStartY;
+                this.endScreenAnimation.velocity = 0;
+                this.endScreenAnimation.isAnimating = true;
+                this.endScreenAnimation.startTime = Date.now();
                 break;
         }
     }
@@ -1094,56 +1111,84 @@ class FlappyBird {
     }
 
     drawGameOverOverlay() {
-        // Draw end background
         if (this.endBgLoaded) {
             const bgWidth = this.canvas.width * 0.8;
             const aspectRatio = this.endBgImg.height / this.endBgImg.width;
             const bgHeight = bgWidth * aspectRatio;
             
+            // Update animation
+            if (this.endScreenAnimation.isAnimating) {
+                // Apply gravity
+                this.endScreenAnimation.velocity += this.endScreenAnimation.gravity;
+                this.endScreenAnimation.bgCurrentY += this.endScreenAnimation.velocity;
+                
+                // Check for bounce
+                if (this.endScreenAnimation.bgCurrentY > this.endScreenAnimation.bgTargetY) {
+                    this.endScreenAnimation.bgCurrentY = this.endScreenAnimation.bgTargetY;
+                    this.endScreenAnimation.velocity *= this.endScreenAnimation.bounce;
+                    
+                    // Stop animation when bounce is small enough
+                    if (Math.abs(this.endScreenAnimation.velocity) < 0.5) {
+                        this.endScreenAnimation.isAnimating = false;
+                        this.endScreenAnimation.bgCurrentY = this.endScreenAnimation.bgTargetY;
+                    }
+                }
+            }
+            
+            // Draw background with current animated position
             this.ctx.drawImage(
                 this.endBgImg,
                 (this.canvas.width - bgWidth) / 2,
-                this.canvas.height * 0.2,
+                this.endScreenAnimation.bgCurrentY,
                 bgWidth,
                 bgHeight
             );
             
-            // Draw current score
-            this.ctx.fillStyle = '#000';
-            this.ctx.font = `bold ${this.canvas.width * 0.08}px ${this.gameFont}`;
-            this.ctx.textAlign = 'right';
-            this.ctx.fillText(
-                this.score.toString(),
-                this.canvas.width * 0.7,
-                this.canvas.height * 0.3
-            );
+            // Draw scores when animation is complete
+            if (!this.endScreenAnimation.isAnimating) {
+                // Draw current score
+                this.ctx.fillStyle = '#000';
+                this.ctx.font = `bold ${this.canvas.width * 0.08}px ${this.gameFont}`;
+                this.ctx.textAlign = 'right';
+                this.ctx.fillText(
+                    this.score.toString(),
+                    this.canvas.width * 0.7,
+                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.3
+                );
+                
+                // Draw best score
+                this.ctx.fillText(
+                    '6',  // Replace with actual best score logic
+                    this.canvas.width * 0.7,
+                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.5
+                );
+            }
             
-            // Draw best score
-            this.ctx.fillText(
-                '6',  // Replace with actual best score logic
-                this.canvas.width * 0.7,
-                this.canvas.height * 0.4
-            );
-        }
-
-        // Draw play button
-        if (this.playBtnLoaded) {
-            const btnWidth = this.canvas.width * 0.4;
-            const aspectRatio = this.playBtnImg.height / this.playBtnImg.width;
-            const btnHeight = btnWidth * aspectRatio;
-            
-            this.restartButton.width = btnWidth;
-            this.restartButton.height = btnHeight;
-            this.restartButton.x = (this.canvas.width - btnWidth) / 2;
-            this.restartButton.y = this.canvas.height * 0.6;
-            
-            this.ctx.drawImage(
-                this.playBtnImg,
-                this.restartButton.x,
-                this.restartButton.y,
-                btnWidth,
-                btnHeight
-            );
+            // Draw play button - always draw but animate with background
+            if (this.playBtnLoaded) {
+                const btnWidth = this.canvas.width * 0.4;
+                const aspectRatio = this.playBtnImg.height / this.playBtnImg.width;
+                const btnHeight = btnWidth * aspectRatio;
+                
+                // Calculate button position based on animation
+                const baseY = this.canvas.height * 0.6;
+                const buttonY = this.endScreenAnimation.isAnimating ? 
+                    baseY + (this.endScreenAnimation.bgCurrentY - this.endScreenAnimation.bgTargetY) : 
+                    baseY;
+                
+                this.restartButton.width = btnWidth;
+                this.restartButton.height = btnHeight;
+                this.restartButton.x = (this.canvas.width - btnWidth) / 2;
+                this.restartButton.y = buttonY;
+                
+                this.ctx.drawImage(
+                    this.playBtnImg,
+                    this.restartButton.x,
+                    buttonY,
+                    btnWidth,
+                    btnHeight
+                );
+            }
         }
     }
 
