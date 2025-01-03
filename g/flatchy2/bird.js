@@ -352,6 +352,9 @@ class FlappyBird {
 
         // Setup feather particle system
         this.featherParticles = [];
+
+        // Load hit sound
+        this.hitSound = new Audio('audio/hit.wav');
     }
     
     init() {
@@ -886,6 +889,11 @@ class FlappyBird {
                     this.gameLoopStarted = true;
                     this.gameLoop();
                 }
+                break;
+            case this.GameState.DEAD:
+                // Play hit sound when entering dead state
+                this.hitSound.currentTime = 0;
+                this.hitSound.play();
                 break;
             case this.GameState.END:
                 // Setup end state
