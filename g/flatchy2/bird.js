@@ -124,11 +124,11 @@ class FlappyBird {
         this.baseSpeed = 1.8;
         this.currentSpeed = this.baseSpeed * (1 + (this.startingLevel - 1) * this.speedIncreasePerLevel);
         
-        this.pipes = [];
-        this.pipeWidth = this.canvas.width * 0.15;
-        this.pipeGap = this.canvas.height * 0.25;
-        this.pipeInterval = 2000;
-        this.lastPipe = 0;
+        this.logs = [];
+        this.logWidth = this.canvas.width * 0.15;
+        this.logGap = this.canvas.height * 0.25;
+        this.logInterval = 2000;
+        this.lastLog = 0;
         
         // Setup scoring and game state
         this.score = 0;
@@ -492,8 +492,8 @@ class FlappyBird {
     
     restart() {
         this.resetBirdPosition();
-        this.pipes = [];
-        this.lastPipe = 0;
+        this.logs = [];
+        this.lastLog = 0;
         this.score = 0;
         this.setState(this.GameState.READY);
     }
@@ -552,36 +552,36 @@ class FlappyBird {
 
         const now = Date.now();
         
-        // Generate new pipes
-        if (now - this.lastPipe > this.pipeInterval) {
-            const pipeY = Math.random() * (this.canvas.height - this.pipeGap - 100) + 50;
-            this.pipes.push({
+        // Generate new logs
+        if (now - this.lastLog > this.logInterval) {
+            const logY = Math.random() * (this.canvas.height - this.logGap - 100) + 50;
+            this.logs.push({
                 x: this.canvas.width,
-                y: pipeY,
+                y: logY,
                 scored: false
             });
-            this.lastPipe = now;
+            this.lastLog = now;
         }
         
-        // Update pipes
-        this.pipes.forEach((pipe, index) => {
-            pipe.x -= this.currentSpeed;
+        // Update logs
+        this.logs.forEach((log, index) => {
+            log.x -= this.currentSpeed;
             
             // Check for score
-            if (!pipe.scored && pipe.x + this.pipeWidth < this.bird.x) {
-                pipe.scored = true;
+            if (!log.scored && log.x + this.logWidth < this.bird.x) {
+                log.scored = true;
                 this.score++;
             }
             
             // Check for collisions
-            if (this.checkCollision(pipe)) {
+            if (this.checkCollision(log)) {
                 this.setState(this.GameState.DEAD);
                 return;
             }
         });
         
-        // Remove off-screen pipes
-        this.pipes = this.pipes.filter(pipe => pipe.x + this.pipeWidth > 0);
+        // Remove off-screen logs
+        this.logs = this.logs.filter(log => log.x + this.logWidth > 0);
 
         // Update feather particles
         this.featherParticles = this.featherParticles.filter(particle => {
@@ -620,8 +620,8 @@ class FlappyBird {
             jump: this.canvas.height * -0.012,
             size: this.canvas.width * 0.12
         };
-        this.pipes = [];
-        this.lastPipe = 0;
+        this.logs = [];
+        this.lastLog = 0;
         this.gameStarted = true;
         this.gameOver = false;
         this.levelComplete = false;
@@ -637,7 +637,7 @@ class FlappyBird {
         this.gameLoop();
     }
     
-    checkCollision(pipe) {
+    checkCollision(log) {
         const birdBox = {
             left: this.bird.x,
             right: this.bird.x + this.bird.size,
@@ -645,24 +645,24 @@ class FlappyBird {
             bottom: this.bird.y + this.bird.size
         };
         
-        // Top pipe
-        const topPipeBox = {
-            left: pipe.x,
-            right: pipe.x + this.pipeWidth,
+        // Top log
+        const topLogBox = {
+            left: log.x,
+            right: log.x + this.logWidth,
             top: 0,
-            bottom: pipe.y
+            bottom: log.y
         };
         
-        // Bottom pipe
-        const bottomPipeBox = {
-            left: pipe.x,
-            right: pipe.x + this.pipeWidth,
-            top: pipe.y + this.pipeGap,
+        // Bottom log
+        const bottomLogBox = {
+            left: log.x,
+            right: log.x + this.logWidth,
+            top: log.y + this.logGap,
             bottom: this.canvas.height
         };
         
-        return this.checkBoxCollision(birdBox, topPipeBox) || 
-               this.checkBoxCollision(birdBox, bottomPipeBox);
+        return this.checkBoxCollision(birdBox, topLogBox) || 
+               this.checkBoxCollision(birdBox, bottomLogBox);
     }
     
     checkBoxCollision(box1, box2) {
@@ -691,7 +691,7 @@ class FlappyBird {
                 
             case this.GameState.PLAYING:
                 this.drawGameBackground();
-                this.drawPipes();
+                this.drawLogs();
                 this.drawBird();
                 this.drawFeatherParticles();
                 this.drawHUD();
@@ -699,7 +699,7 @@ class FlappyBird {
                 
             case this.GameState.END:
                 this.drawGameBackground();
-                this.drawPipes();
+                this.drawLogs();
                 this.drawBird();
                 this.drawFeatherParticles();
                 this.drawGameOverOverlay();
@@ -707,7 +707,7 @@ class FlappyBird {
                 
             case this.GameState.DEAD:
                 this.drawGameBackground();
-                this.drawPipes();
+                this.drawLogs();
                 this.drawBird();
                 this.drawFeatherParticles();
                 this.drawHUD();
@@ -911,7 +911,7 @@ class FlappyBird {
                 this.resetBirdPosition();
                 break;
             case this.GameState.PLAYING:
-                this.pipes = [];
+                this.logs = [];
                 this.score = 0;
                 // Make sure game loop is running
                 if (!this.gameLoopStarted) {
@@ -1071,28 +1071,28 @@ class FlappyBird {
         }
     }
 
-    drawPipes() {
-        this.pipes.forEach(pipe => {
+    drawLogs() {
+        this.logs.forEach(log => {
             if (this.treeLoaded) {
-                // Draw bottom tree
+                // Draw bottom log
                 this.ctx.drawImage(
                     this.treeImg,
                     0, 0,
                     this.treeImg.width, this.treeImg.height,
-                    pipe.x + 1, pipe.y + this.pipeGap,
-                    this.pipeWidth, this.canvas.height - (pipe.y + this.pipeGap)
+                    log.x + 1, log.y + this.logGap,
+                    this.logWidth, this.canvas.height - (log.y + this.logGap)
                 );
                 
-                // Draw top tree (flipped)
+                // Draw top log (flipped)
                 this.ctx.save();
-                this.ctx.translate(pipe.x + this.pipeWidth/2, pipe.y);
+                this.ctx.translate(log.x + this.logWidth/2, log.y);
                 this.ctx.scale(1, -1);
                 this.ctx.drawImage(
                     this.treeImg,
                     0, 0,
                     this.treeImg.width, this.treeImg.height,
-                    -this.pipeWidth/2 + 1, 0,
-                    this.pipeWidth, pipe.y
+                    -this.logWidth/2 + 1, 0,
+                    this.logWidth, log.y
                 );
                 this.ctx.restore();
             }
