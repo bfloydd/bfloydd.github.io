@@ -355,6 +355,22 @@ class FlappyBird {
 
         // Load hit sound
         this.hitSound = new Audio('audio/hit.wav');
+
+        // Load end screen background
+        this.endBgImg = new Image();
+        this.endBgImg.onload = () => {
+            this.endBgLoaded = true;
+        };
+        this.endBgImg.src = 'images/end/end_bg.png';
+        this.endBgLoaded = false;
+        
+        // Load play button
+        this.playBtnImg = new Image();
+        this.playBtnImg.onload = () => {
+            this.playBtnLoaded = true;
+        };
+        this.playBtnImg.src = 'images/ui/btns/play_btn_up.png';
+        this.playBtnLoaded = false;
     }
     
     init() {
@@ -1078,34 +1094,42 @@ class FlappyBird {
     }
 
     drawGameOverOverlay() {
-        // Draw "GAME OVER" text
-        if (this.gameOverImgLoaded) {
-            const textWidth = this.canvas.width * 0.7;
-            const aspectRatio = this.gameOverImg.height / this.gameOverImg.width;
-            const textHeight = textWidth * aspectRatio;
+        // Draw end background
+        if (this.endBgLoaded) {
+            const bgWidth = this.canvas.width * 0.8;
+            const aspectRatio = this.endBgImg.height / this.endBgImg.width;
+            const bgHeight = bgWidth * aspectRatio;
             
             this.ctx.drawImage(
-                this.gameOverImg,
-                (this.canvas.width - textWidth) / 2,
-                this.canvas.height * 0.3,
-                textWidth,
-                textHeight
+                this.endBgImg,
+                (this.canvas.width - bgWidth) / 2,
+                this.canvas.height * 0.2,
+                bgWidth,
+                bgHeight
+            );
+            
+            // Draw current score
+            this.ctx.fillStyle = '#000';
+            this.ctx.font = `bold ${this.canvas.width * 0.08}px ${this.gameFont}`;
+            this.ctx.textAlign = 'right';
+            this.ctx.fillText(
+                this.score.toString(),
+                this.canvas.width * 0.7,
+                this.canvas.height * 0.3
+            );
+            
+            // Draw best score
+            this.ctx.fillText(
+                '6',  // Replace with actual best score logic
+                this.canvas.width * 0.7,
+                this.canvas.height * 0.4
             );
         }
 
-        // Draw score
-        this.ctx.fillStyle = '#fff';
-        this.ctx.font = `bold ${this.canvas.width * 0.08}px ${this.gameFont}`;
-        this.ctx.textAlign = 'center';
-        this.ctx.strokeStyle = '#000';
-        this.ctx.lineWidth = 3;
-        this.ctx.strokeText(`Score: ${this.score}`, this.canvas.width / 2, this.canvas.height * 0.5);
-        this.ctx.fillText(`Score: ${this.score}`, this.canvas.width / 2, this.canvas.height * 0.5);
-
-        // Draw restart button
-        if (this.plainBtnLoaded) {
+        // Draw play button
+        if (this.playBtnLoaded) {
             const btnWidth = this.canvas.width * 0.4;
-            const aspectRatio = this.plainBtnImg.height / this.plainBtnImg.width;
+            const aspectRatio = this.playBtnImg.height / this.playBtnImg.width;
             const btnHeight = btnWidth * aspectRatio;
             
             this.restartButton.width = btnWidth;
@@ -1114,21 +1138,11 @@ class FlappyBird {
             this.restartButton.y = this.canvas.height * 0.6;
             
             this.ctx.drawImage(
-                this.plainBtnImg,
+                this.playBtnImg,
                 this.restartButton.x,
                 this.restartButton.y,
                 btnWidth,
                 btnHeight
-            );
-
-            this.ctx.fillStyle = '#000000';
-            this.ctx.font = `bold ${this.canvas.width * 0.05}px ${this.gameFont}`;
-            this.ctx.textAlign = 'center';
-            this.ctx.textBaseline = 'middle';
-            this.ctx.fillText(
-                'Restart',
-                this.restartButton.x + (btnWidth/2),
-                this.restartButton.y + (btnHeight/2)
             );
         }
     }
