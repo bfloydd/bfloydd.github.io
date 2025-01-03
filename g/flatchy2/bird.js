@@ -683,31 +683,36 @@ class FlappyBird {
                 break;
                 
             case this.GameState.READY:
-                this.drawGameBackground();
+                this.drawSkyAndHills();
+                this.drawLogs();  // Draw logs before ground
+                this.drawGround();  // Draw ground after logs
                 this.drawBird();
                 this.drawFeatherParticles();
                 this.drawReadyOverlay();
                 break;
                 
             case this.GameState.PLAYING:
-                this.drawGameBackground();
-                this.drawLogs();
+                this.drawSkyAndHills();
+                this.drawLogs();  // Draw logs before ground
+                this.drawGround();  // Draw ground after logs
                 this.drawBird();
                 this.drawFeatherParticles();
                 this.drawHUD();
                 break;
                 
             case this.GameState.END:
-                this.drawGameBackground();
-                this.drawLogs();
+                this.drawSkyAndHills();
+                this.drawLogs();  // Draw logs before ground
+                this.drawGround();  // Draw ground after logs
                 this.drawBird();
                 this.drawFeatherParticles();
                 this.drawGameOverOverlay();
                 break;
                 
             case this.GameState.DEAD:
-                this.drawGameBackground();
-                this.drawLogs();
+                this.drawSkyAndHills();
+                this.drawLogs();  // Draw logs before ground
+                this.drawGround();  // Draw ground after logs
                 this.drawBird();
                 this.drawFeatherParticles();
                 this.drawHUD();
@@ -950,7 +955,7 @@ class FlappyBird {
         };
     }
 
-    drawGameBackground() {
+    drawSkyAndHills() {
         // Draw sky background
         if (this.skyBgLoaded) {
             this.ctx.drawImage(
@@ -961,7 +966,7 @@ class FlappyBird {
             );
         }
         
-        // Draw background with proper scaling
+        // Draw background hills with proper scaling
         if (this.backgroundLoaded) {
             const scale = Math.max(
                 this.canvas.width / this.backgroundImg.width,
@@ -974,8 +979,9 @@ class FlappyBird {
             
             this.ctx.drawImage(this.backgroundImg, x, y, width, height);
         }
+    }
 
-        // Draw ground
+    drawGround() {
         if (this.groundLoaded) {
             const y = this.canvas.height - 50;
             this.ctx.drawImage(
