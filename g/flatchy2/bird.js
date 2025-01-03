@@ -384,6 +384,10 @@ class FlappyBird {
             startTime: 0,
             animationDuration: 1000 // 1 second
         };
+
+        // Add background parallax scrolling
+        this.backgroundOffset = 0;
+        this.backgroundScrollSpeed = 0.5; // Half the speed of the main game
     }
     
     init() {
@@ -956,7 +960,7 @@ class FlappyBird {
     }
 
     drawSkyAndHills() {
-        // Draw sky background
+        // Draw sky background (static)
         if (this.skyBgLoaded) {
             this.ctx.drawImage(
                 this.skyBgImg,
@@ -966,18 +970,38 @@ class FlappyBird {
             );
         }
         
-        // Draw background hills with proper scaling
+        // Draw scrolling background hills with parallax
         if (this.backgroundLoaded) {
+            // Update background position if in playing state
+            if (this.isState(this.GameState.PLAYING)) {
+                this.backgroundOffset -= this.currentSpeed * this.backgroundScrollSpeed;
+                if (this.backgroundOffset <= -this.backgroundImg.width) {
+                    this.backgroundOffset = 0;
+                }
+            }
+            
+            // Draw two copies of the background for seamless scrolling
             const scale = Math.max(
                 this.canvas.width / this.backgroundImg.width,
                 this.canvas.height / this.backgroundImg.height
             );
             const width = this.backgroundImg.width * scale;
             const height = this.backgroundImg.height * scale;
-            const x = (this.canvas.width - width) / 2;
             const y = (this.canvas.height - height) / 2;
             
-            this.ctx.drawImage(this.backgroundImg, x, y, width, height);
+            // Draw first copy
+            this.ctx.drawImage(
+                this.backgroundImg,
+                this.backgroundOffset, y,
+                width, height
+            );
+            
+            // Draw second copy
+            this.ctx.drawImage(
+                this.backgroundImg,
+                this.backgroundOffset + width, y,
+                width, height
+            );
         }
     }
 
