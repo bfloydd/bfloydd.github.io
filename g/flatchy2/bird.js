@@ -125,7 +125,7 @@ class FlappyBird {
         this.currentSpeed = this.baseSpeed * (1 + (this.startingLevel - 1) * this.speedIncreasePerLevel);
         
         this.logs = [];
-        this.logWidth = this.canvas.width * 0.15;
+        this.logWidth = this.canvas.width * 0.25;
         this.logGap = this.canvas.height * 0.25;
         this.logInterval = 2000;
         this.lastLog = 0;
@@ -1074,16 +1074,19 @@ class FlappyBird {
     drawLogs() {
         this.logs.forEach(log => {
             if (this.treeLoaded) {
-                // Draw bottom log
+                const aspectRatio = this.treeImg.height / this.treeImg.width;
+                const logHeight = this.logWidth * aspectRatio;
+                
+                // Draw bottom log (extending below screen if needed)
                 this.ctx.drawImage(
                     this.treeImg,
                     0, 0,
                     this.treeImg.width, this.treeImg.height,
                     log.x + 1, log.y + this.logGap,
-                    this.logWidth, this.canvas.height - (log.y + this.logGap)
+                    this.logWidth, logHeight
                 );
                 
-                // Draw top log (flipped)
+                // Draw top log (flipped and extending above screen if needed)
                 this.ctx.save();
                 this.ctx.translate(log.x + this.logWidth/2, log.y);
                 this.ctx.scale(1, -1);
@@ -1092,7 +1095,7 @@ class FlappyBird {
                     0, 0,
                     this.treeImg.width, this.treeImg.height,
                     -this.logWidth/2 + 1, 0,
-                    this.logWidth, log.y
+                    this.logWidth, logHeight
                 );
                 this.ctx.restore();
             }
