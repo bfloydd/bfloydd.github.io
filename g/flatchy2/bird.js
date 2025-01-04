@@ -389,6 +389,18 @@ class FlappyBird {
         // Add background parallax scrolling
         this.backgroundOffset = 0;
         this.backgroundScrollSpeed = 0.5; // Half the speed of the main game
+
+        // Add cloud system
+        this.cloudSystem = {
+            clouds: [],
+            minY: 0,
+            maxY: this.canvas.height * 0.4,
+            minGap: this.canvas.width * 0.5,
+            scrollSpeed: 0.3 // Slower than hills
+        };
+
+        // Initialize some clouds
+        this.initializeClouds();
     }
     
     init() {
@@ -633,6 +645,21 @@ class FlappyBird {
                     return;
                 }
             }
+        }
+
+        // Update cloud positions in READY and PLAYING states
+        if (this.isState(this.GameState.READY) || this.isState(this.GameState.PLAYING)) {
+            // Update clouds
+            this.cloudSystem.clouds.forEach((cloud, index) => {
+                cloud.x -= this.baseSpeed * this.cloudSystem.scrollSpeed;
+                
+                // Remove clouds that are off screen
+                if (cloud.x < -this.canvas.width * cloud.scale) {
+                    this.cloudSystem.clouds.splice(index, 1);
+                    // Add new cloud at the right side
+                    this.addNewCloud();
+                }
+            });
         }
     }
     
@@ -1008,6 +1035,25 @@ class FlappyBird {
                 this.canvas.height
             );
         }
+
+        // Draw clouds
+        this.cloudSystem.clouds.forEach(cloud => {
+            if (cloud.image && cloud.image.loaded) {
+                const cloudWidth = this.canvas.width * 0.3 * cloud.scale;
+                const aspectRatio = cloud.image.height / cloud.image.width;
+                const cloudHeight = cloudWidth * aspectRatio;
+                
+                this.ctx.globalAlpha = 0.8;
+                this.ctx.drawImage(
+                    cloud.image,
+                    cloud.x,
+                    cloud.y,
+                    cloudWidth,
+                    cloudHeight
+                );
+                this.ctx.globalAlpha = 1;
+            }
+        });
         
         // Draw scrolling background hills with parallax
         if (this.backgroundLoaded) {
@@ -1321,5 +1367,25 @@ class FlappyBird {
         
         this.ctx.restore();
         });
+    }
+
+    // Add new method to initialize clouds
+    initializeClouds() {
+        // Create initial set of clouds spread across the screen
+        const numInitialClouds = 4;
+        for (let i = 0; i < numInitialClouds; i++) {
+            this.addNewCloud(i * (this.canvas.width / 2));
+        }
+    }
+
+    // Add new method to create clouds
+    addNewCloud(x = this.canvas.width) {
+        const cloud = {
+            x: x,
+            y: this.cloudSystem.minY + Math.random() * (this.cloudSystem.maxY - this.cloudSystem.minY),
+            scale: 0.5 + Math.random() * 0.5,
+            image: this.clouds[Math.floor(Math.random() * this.clouds.length)]
+        };
+        this.cloudSystem.clouds.push(cloud);
     }
 } 
