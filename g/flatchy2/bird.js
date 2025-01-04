@@ -146,10 +146,10 @@ class FlappyBird {
         };
         
         this.restartButton = {
-            x: this.canvas.width * 0.25,
-            y: this.canvas.height * 0.6,
-            width: this.canvas.width * 0.5,
-            height: this.canvas.height * 0.1
+            x: 0,
+            y: 0,
+            width: this.canvas.width * 0.4,
+            height: this.canvas.width * 0.4 * 0.25 // Assuming 4:1 aspect ratio for button
         };
         
         // Setup ambient effects
@@ -428,19 +428,19 @@ class FlappyBird {
                     this.setState(this.GameState.PLAYING);
                     break;
                 case this.GameState.PLAYING:
-            this.bird.velocity = this.bird.jump;
+                    this.bird.velocity = this.bird.jump;
                     
                     // Play either whoosh or fart sound (35% chance for fart)
                     if (Math.random() < 0.35) {
                         // Play random fart sound
                         const randomIndex = Math.floor(Math.random() * this.fartSounds.length);
-                        this.fartSounds[randomIndex].currentTime = 0; // Reset sound to start
+                        this.fartSounds[randomIndex].currentTime = 0;
                         this.fartSounds[randomIndex].play();
                         // Create feather burst when tooting
                         this.createFeatherBurst();
                     } else {
                         // Play whoosh sound
-                        this.whooshSound.currentTime = 0; // Reset sound to start
+                        this.whooshSound.currentTime = 0;
                         this.whooshSound.play();
                     }
                     break;
@@ -450,59 +450,52 @@ class FlappyBird {
             }
         };
         
-        this.canvas.addEventListener('click', (e) => {
+        // Handle both mouse clicks and touch events
+        const handleInteraction = (e) => {
+            e.preventDefault();
+            
             const rect = this.canvas.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const clickY = e.clientY - rect.top;
+            // Account for canvas scaling
+            const scaleX = this.canvas.width / rect.width;
+            const scaleY = this.canvas.height / rect.height;
             
-            if (this.isOnTitleScreen) {
-                const btn = this.titleScreenElements.startButton;
-                if (clickX >= btn.x && 
-                    clickX <= btn.x + btn.width &&
-                    clickY >= btn.y && 
-                    clickY <= btn.y + btn.height) {
-                    this.startGameFromTitle();
-                }
-                return;
-            }
+            // Calculate click position with scaling
+            const clickX = ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * scaleX;
+            const clickY = ((e.touches ? e.touches[0].clientY : e.clientY) - rect.top) * scaleY;
             
-            if (this.levelComplete) {
-                if (clickX >= this.continueButton.x && 
-                    clickX <= this.continueButton.x + this.continueButton.width &&
-                    clickY >= this.continueButton.y && 
-                    clickY <= this.continueButton.y + this.continueButton.height) {
-                    this.startLevel(this.currentLevel + 1);
-                }
-            } else if (this.gameOver) {
-                if (clickX >= this.restartButton.x && 
-                    clickX <= this.restartButton.x + this.restartButton.width &&
-                    clickY >= this.restartButton.y && 
-                    clickY <= this.restartButton.y + this.restartButton.height) {
-                    this.restart();
-                }
-            } else if (!this.gameStarted) {
-                if (clickX >= this.startButton.x && 
-                    clickX <= this.startButton.x + this.startButton.width &&
-                    clickY >= this.startButton.y && 
-                    clickY <= this.startButton.y + this.startButton.height) {
+            switch (this.currentState) {
+                case this.GameState.TITLE:
                     handleInput();
-                }
-            } else {
-                handleInput();
+                    break;
+                    
+                case this.GameState.READY:
+                    handleInput();
+                    break;
+                    
+                case this.GameState.PLAYING:
+                    handleInput();
+                    break;
+                    
+                case this.GameState.END:
+                    // Only check button click if animation is complete
+                    if (!this.endScreenAnimation.isAnimating && 
+                        this.playBtnLoaded && 
+                        clickX >= this.restartButton.x && 
+                        clickX <= this.restartButton.x + this.restartButton.width &&
+                        clickY >= this.restartButton.y && 
+                        clickY <= this.restartButton.y + this.restartButton.height) {
+                        this.setState(this.GameState.READY); // Directly set state instead of using handleInput
+                    }
+                    break;
             }
-        });
+        };
+
+        this.canvas.addEventListener('click', handleInteraction);
+        this.canvas.addEventListener('touchstart', handleInteraction);
         
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
-                if (this.levelComplete) {
-                    this.startLevel(this.currentLevel + 1);
-                } else if (this.gameOver) {
-                    this.restart();
-                } else if (!this.gameStarted) {
-                    handleInput();
-                } else {
-                    handleInput();
-                }
+                handleInput(); // Always use handleInput for consistency
             }
         });
     }
@@ -1000,11 +993,25 @@ class FlappyBird {
                 this.hitSound.play();
                 break;
             case this.GameState.END:
-                // Reset and start end screen animation
+                // Reset and start end screen animation with higher position
+                this.endScreenAnimation.bgStartY = -this.canvas.height * 0.5;
+                this.endScreenAnimation.bgTargetY = this.canvas.height * 0.1; // Changed from 0.2 to 0.1
                 this.endScreenAnimation.bgCurrentY = this.endScreenAnimation.bgStartY;
                 this.endScreenAnimation.velocity = 0;
                 this.endScreenAnimation.isAnimating = true;
                 this.endScreenAnimation.startTime = Date.now();
+                
+                // Position restart button initially - moved higher
+                const btnWidth = this.canvas.width * 0.4;
+                const aspectRatio = this.playBtnImg ? (this.playBtnImg.height / this.playBtnImg.width) : 0.25;
+                const btnHeight = btnWidth * aspectRatio;
+                
+                this.restartButton = {
+                    x: (this.canvas.width - btnWidth) / 2,
+                    y: this.canvas.height * 0.45, // Changed from 0.55 to 0.45
+                    width: btnWidth,
+                    height: btnHeight
+                };
                 break;
         }
     }
@@ -1219,17 +1226,18 @@ class FlappyBird {
 
     drawGameOverOverlay() {
         if (this.endBgLoaded) {
-            const bgWidth = this.canvas.width * 0.8;
+            // Increased width and adjusted position
+            const bgWidth = this.canvas.width * 0.9; // Changed from 0.8 to 0.9
             const aspectRatio = this.endBgImg.height / this.endBgImg.width;
             const bgHeight = bgWidth * aspectRatio;
             
-            // Update animation
+            // Update animation with higher target position
             if (this.endScreenAnimation.isAnimating) {
                 // Apply gravity
                 this.endScreenAnimation.velocity += this.endScreenAnimation.gravity;
                 this.endScreenAnimation.bgCurrentY += this.endScreenAnimation.velocity;
                 
-                // Check for bounce
+                // Check for bounce at new target position
                 if (this.endScreenAnimation.bgCurrentY > this.endScreenAnimation.bgTargetY) {
                     this.endScreenAnimation.bgCurrentY = this.endScreenAnimation.bgTargetY;
                     this.endScreenAnimation.velocity *= this.endScreenAnimation.bounce;
@@ -1243,7 +1251,7 @@ class FlappyBird {
             }
             
             // Draw background with current animated position
-                    this.ctx.drawImage(
+            this.ctx.drawImage(
                 this.endBgImg,
                 (this.canvas.width - bgWidth) / 2,
                 this.endScreenAnimation.bgCurrentY,
@@ -1271,30 +1279,49 @@ class FlappyBird {
                 );
             }
             
-            // Draw play button - always draw but animate with background
+            // Draw play button - using same dimensions as start button
             if (this.playBtnLoaded) {
-                const btnWidth = this.canvas.width * 0.4;
+                const btnWidth = this.canvas.width * 0.5; // Changed from 0.4 to 0.5 to match start button
                 const aspectRatio = this.playBtnImg.height / this.playBtnImg.width;
-                const btnHeight = btnWidth * aspectRatio;
+                const btnHeight = btnWidth * (this.startBtnImg.height / this.startBtnImg.width); // Use start button aspect ratio
                 
                 // Calculate button position based on animation
-                const baseY = this.canvas.height * 0.6;
+                const baseY = this.canvas.height * 0.45;
                 const buttonY = this.endScreenAnimation.isAnimating ? 
                     baseY + (this.endScreenAnimation.bgCurrentY - this.endScreenAnimation.bgTargetY) : 
                     baseY;
+
+                // Update hitbox position
+                const buttonX = (this.canvas.width - btnWidth) / 2;
                 
-                this.restartButton.width = btnWidth;
-                this.restartButton.height = btnHeight;
-                this.restartButton.x = (this.canvas.width - btnWidth) / 2;
-                this.restartButton.y = buttonY;
+                // Update the restart button hitbox to match final position
+                this.restartButton = {
+                    x: buttonX,
+                    y: this.endScreenAnimation.isAnimating ? buttonY : baseY,
+                    width: btnWidth,
+                    height: btnHeight
+                };
                 
+                // Draw the play button
                 this.ctx.drawImage(
                     this.playBtnImg,
-                    this.restartButton.x,
+                    buttonX,
                     buttonY,
                     btnWidth,
                     btnHeight
                 );
+
+                // Draw plain button below play button with same dimensions
+                if (this.plainBtnLoaded) {
+                    const plainBtnY = buttonY + btnHeight + 20; // 20px gap between buttons
+                    this.ctx.drawImage(
+                        this.plainBtnImg,
+                        buttonX,
+                        plainBtnY,
+                        btnWidth,
+                        btnHeight
+                    );
+                }
             }
         }
     }
