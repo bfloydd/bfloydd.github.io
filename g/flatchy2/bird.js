@@ -35,6 +35,7 @@ class FlappyBird {
         this.backgroundImg = new Image();
         this.backgroundImg.onload = () => {
             this.backgroundLoaded = true;
+            this.backgroundAspectRatio = this.backgroundImg.height / this.backgroundImg.width;
         };
         this.backgroundImg.src = 'images/hills.png';
         this.backgroundLoaded = false;
@@ -972,36 +973,28 @@ class FlappyBird {
         
         // Draw scrolling background hills with parallax
         if (this.backgroundLoaded) {
+            // Calculate dimensions first
+            const displayWidth = this.backgroundImg.width * 0.6;
+            const displayHeight = displayWidth * (this.backgroundImg.height / this.backgroundImg.width);
+            const y = this.canvas.height - displayHeight - 50;
+            
             // Update background position if in playing state
             if (this.isState(this.GameState.PLAYING)) {
                 this.backgroundOffset -= this.currentSpeed * this.backgroundScrollSpeed;
-                if (this.backgroundOffset <= -this.backgroundImg.width) {
+                // Reset position for seamless scrolling
+                if (this.backgroundOffset <= -displayWidth) {
                     this.backgroundOffset = 0;
                 }
             }
             
-            // Draw two copies of the background for seamless scrolling
-            const scale = Math.max(
-                this.canvas.width / this.backgroundImg.width,
-                this.canvas.height / this.backgroundImg.height
-            );
-            const width = this.backgroundImg.width * scale;
-            const height = this.backgroundImg.height * scale;
-            const y = (this.canvas.height - height) / 2;
-            
-            // Draw first copy
-            this.ctx.drawImage(
-                this.backgroundImg,
-                this.backgroundOffset, y,
-                width, height
-            );
-            
-            // Draw second copy
-            this.ctx.drawImage(
-                this.backgroundImg,
-                this.backgroundOffset + width, y,
-                width, height
-            );
+            // Draw copies for seamless scrolling
+            for (let i = 0; i < 3; i++) {
+                this.ctx.drawImage(
+                    this.backgroundImg,
+                    this.backgroundOffset + (displayWidth * i), y,
+                    displayWidth, displayHeight
+                );
+            }
         }
     }
 
