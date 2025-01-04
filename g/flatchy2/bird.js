@@ -116,8 +116,8 @@ class FlappyBird {
             x: this.canvas.width * 0.2,
             y: this.canvas.height * 0.4,
             velocity: 0,
-            gravity: this.canvas.height * 0.0005,
-            jump: this.canvas.height * -0.0135,
+            gravity: this.canvas.height * 0.00045,
+            jump: this.canvas.height * -0.012,
             size: this.canvas.width * 0.15
         };
         
@@ -517,7 +517,7 @@ class FlappyBird {
         if (this.isState(this.GameState.READY) || this.isState(this.GameState.PLAYING)) {
             // Scroll ground texture with consistent speed
             if (this.groundLoaded) {
-                this.groundOffset -= this.baseSpeed * 1.5; // Keep ground speed the same
+                this.groundOffset -= this.baseSpeed * 1.2; // Reduced from 1.5 to 1.2
                 if (this.groundOffset <= -this.groundImg.width) {
                     this.groundOffset = 0;
                 }
@@ -648,8 +648,8 @@ class FlappyBird {
             x: this.canvas.width * 0.2,
             y: this.canvas.height * 0.4,
             velocity: 0,
-            gravity: this.canvas.height * 0.0005,
-            jump: this.canvas.height * -0.0135,
+            gravity: this.canvas.height * 0.00045,
+            jump: this.canvas.height * -0.012,
             size: this.canvas.width * 0.15
         };
         this.logs = [];
@@ -992,8 +992,8 @@ class FlappyBird {
             x: this.canvas.width * 0.2,
             y: this.canvas.height * 0.4,
             velocity: 0,
-            gravity: this.canvas.height * 0.0005,
-            jump: this.canvas.height * -0.0135,
+            gravity: this.canvas.height * 0.00045,
+            jump: this.canvas.height * -0.012,
             size: this.canvas.width * 0.15
         };
     }
@@ -1014,7 +1014,7 @@ class FlappyBird {
             // Calculate dimensions first
             const displayWidth = this.backgroundImg.width * 0.6;
             const displayHeight = displayWidth * (this.backgroundImg.height / this.backgroundImg.width);
-            const y = this.canvas.height - displayHeight - 48;
+            const y = this.canvas.height - displayHeight - 30;
             
             // Draw copies for seamless scrolling - remove 1px gap between images
             for (let i = 0; i < 3; i++) {
