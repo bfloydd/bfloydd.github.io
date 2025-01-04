@@ -1006,12 +1006,13 @@ class FlappyBird {
             const groundHeight = 50;
             const groundWidth = groundHeight * (this.groundImg.width / this.groundImg.height); // Maintain aspect ratio
             
-            // Draw multiple copies of the ground to fill the width
-            for (let x = this.groundOffset; x < this.canvas.width + groundWidth; x += groundWidth) {
+            // Draw multiple copies of the ground to fill the width, adding 1px overlap
+            for (let x = Math.floor(this.groundOffset); x < this.canvas.width + groundWidth; x += groundWidth) {
                 this.ctx.drawImage(
                     this.groundImg,
                     x, groundY,
-                    groundWidth, groundHeight
+                    groundWidth + 1, // Add 1px overlap to prevent gaps
+                    groundHeight
                 );
             }
         }
