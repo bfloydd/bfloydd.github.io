@@ -987,12 +987,14 @@ class FlappyBird {
                 }
             }
             
-            // Draw copies for seamless scrolling
+            // Draw copies for seamless scrolling - remove 1px gap between images
             for (let i = 0; i < 3; i++) {
+                const x = Math.floor(this.backgroundOffset + (displayWidth * i)); // Use floor to prevent subpixel rendering
                 this.ctx.drawImage(
                     this.backgroundImg,
-                    this.backgroundOffset + (displayWidth * i), y,
-                    displayWidth, displayHeight
+                    x, y,
+                    displayWidth + 1, // Add 1px overlap
+                    displayHeight
                 );
             }
         }
