@@ -118,7 +118,7 @@ class FlappyBird {
             velocity: 0,
             gravity: this.canvas.height * 0.0006,
             jump: this.canvas.height * -0.0135,
-            size: this.canvas.width * 0.12
+            size: this.canvas.width * 0.15
         };
         
         // Setup game speed and obstacles
@@ -650,7 +650,7 @@ class FlappyBird {
             velocity: 0,
             gravity: this.canvas.height * 0.0006,
             jump: this.canvas.height * -0.0135,
-            size: this.canvas.width * 0.12
+            size: this.canvas.width * 0.15
         };
         this.logs = [];
         this.lastLog = 0;
@@ -994,7 +994,7 @@ class FlappyBird {
             velocity: 0,
             gravity: this.canvas.height * 0.0006,
             jump: this.canvas.height * -0.0135,
-            size: this.canvas.width * 0.12
+            size: this.canvas.width * 0.15
         };
     }
 
@@ -1059,6 +1059,10 @@ class FlappyBird {
     drawBird() {
         this.ctx.save();
         
+        // Calculate bird dimensions maintaining aspect ratio
+        const birdWidth = this.bird.size;
+        const birdHeight = birdWidth * (this.spriteAnimation.frameHeight / this.spriteAnimation.frameWidth);
+        
         // Tilt bird based on velocity and state
         let rotation = 0;
         if (this.isState(this.GameState.PLAYING)) {
@@ -1068,19 +1072,17 @@ class FlappyBird {
                 rotation = 0.2;
             }
         } else if (this.isState(this.GameState.DEAD) || this.isState(this.GameState.END)) {
-            // Keep rotation for both DEAD and END states
             rotation = Math.min(Math.PI / 2, this.bird.velocity * 0.1);
         }
         
-        this.ctx.translate(this.bird.x + this.bird.size/2, this.bird.y + this.bird.size/2);
+        this.ctx.translate(this.bird.x + birdWidth/2, this.bird.y + birdHeight/2);
         this.ctx.rotate(rotation);
         
         // Select sprite frame
         let column, row;
         if (this.isState(this.GameState.DEAD) || this.isState(this.GameState.END)) {
-            // Use dead bird sprite frame for both DEAD and END states
-            column = 5;  // 6th column (0-based index)
-            row = 1;     // 2nd row (0-based index)
+            column = 5;
+            row = 1;
         } else {
             column = this.spriteAnimation.currentFrame % this.spriteAnimation.framesPerRow;
             row = Math.floor(this.spriteAnimation.currentFrame / this.spriteAnimation.framesPerRow);
@@ -1092,10 +1094,10 @@ class FlappyBird {
             row * this.spriteAnimation.frameHeight,
             this.spriteAnimation.frameWidth,
             this.spriteAnimation.frameHeight,
-            -this.bird.size/2,
-            -this.bird.size/2,
-            this.bird.size,
-            this.bird.size
+            -birdWidth/2,
+            -birdHeight/2,
+            birdWidth,
+            birdHeight
         );
         
         this.ctx.restore();
