@@ -116,7 +116,7 @@ class FlappyBird {
             x: this.canvas.width * 0.2,
             y: this.canvas.height * 0.4,
             velocity: 0,
-            gravity: this.canvas.height * 0.0006,
+            gravity: this.canvas.height * 0.0005,
             jump: this.canvas.height * -0.0135,
             size: this.canvas.width * 0.15
         };
@@ -648,7 +648,7 @@ class FlappyBird {
             x: this.canvas.width * 0.2,
             y: this.canvas.height * 0.4,
             velocity: 0,
-            gravity: this.canvas.height * 0.0006,
+            gravity: this.canvas.height * 0.0005,
             jump: this.canvas.height * -0.0135,
             size: this.canvas.width * 0.15
         };
@@ -992,7 +992,7 @@ class FlappyBird {
             x: this.canvas.width * 0.2,
             y: this.canvas.height * 0.4,
             velocity: 0,
-            gravity: this.canvas.height * 0.0006,
+            gravity: this.canvas.height * 0.0005,
             jump: this.canvas.height * -0.0135,
             size: this.canvas.width * 0.15
         };
