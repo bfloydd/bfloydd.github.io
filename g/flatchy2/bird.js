@@ -616,6 +616,24 @@ class FlappyBird {
             // Keep particle if it's still visible
             return particle.opacity > 0;
         });
+
+        // Check ground collision in both PLAYING and DEAD states
+        if (this.isState(this.GameState.PLAYING) || this.isState(this.GameState.DEAD)) {
+            // Ground collision (50px is the height of ground.png)
+            if (this.bird.y + this.bird.size > this.canvas.height - 50) {
+                this.bird.y = this.canvas.height - 50 - this.bird.size;
+                
+                if (this.isState(this.GameState.PLAYING)) {
+                    // Hit ground while playing - transition to DEAD state
+                    this.setState(this.GameState.DEAD);
+                    return;
+                } else if (this.isState(this.GameState.DEAD)) {
+                    // Hit ground while dead - transition to END state
+                    this.setState(this.GameState.END);
+                    return;
+                }
+            }
+        }
     }
     
     startLevel(levelNumber) {
