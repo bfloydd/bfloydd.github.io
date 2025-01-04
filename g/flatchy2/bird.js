@@ -416,7 +416,7 @@ class FlappyBird {
                     this.setState(this.GameState.PLAYING);
                     break;
                 case this.GameState.PLAYING:
-                    this.bird.velocity = this.bird.jump;
+            this.bird.velocity = this.bird.jump;
                     
                     // Play either whoosh or fart sound (35% chance for fart)
                     if (Math.random() < 0.35) {
@@ -506,26 +506,26 @@ class FlappyBird {
     update() {
         // Always update animation frames except in DEAD state
         if (!this.isState(this.GameState.DEAD)) {
-            const currentTime = Date.now();
-            if (currentTime - this.spriteAnimation.lastFrameTime > this.spriteAnimation.frameInterval) {
-                this.spriteAnimation.currentFrame = (this.spriteAnimation.currentFrame + 1) % this.spriteAnimation.totalFrames;
-                this.spriteAnimation.lastFrameTime = currentTime;
+        const currentTime = Date.now();
+        if (currentTime - this.spriteAnimation.lastFrameTime > this.spriteAnimation.frameInterval) {
+            this.spriteAnimation.currentFrame = (this.spriteAnimation.currentFrame + 1) % this.spriteAnimation.totalFrames;
+            this.spriteAnimation.lastFrameTime = currentTime;
             }
         }
 
         // Update scrolling for READY and PLAYING states only
         if (this.isState(this.GameState.READY) || this.isState(this.GameState.PLAYING)) {
-            // Scroll ground texture
+            // Scroll ground texture with consistent speed
             if (this.groundLoaded) {
-                this.groundOffset -= this.currentSpeed;
+                this.groundOffset -= this.baseSpeed * 1.5; // Keep ground speed the same
                 if (this.groundOffset <= -this.groundImg.width) {
                     this.groundOffset = 0;
                 }
             }
 
-            // Update background position for parallax
+            // Update background position for parallax with slower speed
             if (this.backgroundLoaded) {
-                this.backgroundOffset -= this.currentSpeed * this.backgroundScrollSpeed;
+                this.backgroundOffset -= this.baseSpeed * this.backgroundScrollSpeed;
                 if (this.backgroundOffset <= -this.backgroundImg.width * 0.6) {
                     this.backgroundOffset = 0;
                 }
@@ -534,7 +534,7 @@ class FlappyBird {
 
         // Only handle logs in PLAYING state
         if (this.isState(this.GameState.PLAYING)) {
-            const now = Date.now();
+        const now = Date.now();
             
             // Generate new logs
             if (now - this.lastLog > this.logInterval) {
@@ -546,20 +546,20 @@ class FlappyBird {
                 const logY = minY + (Math.random() * (maxY - minY));
                 
                 this.logs.push({
-                    x: this.canvas.width,
+                x: this.canvas.width,
                     y: logY,
-                    scored: false
-                });
+                scored: false
+            });
                 this.lastLog = now;
             }
             
-            // Update logs
-            this.logs.forEach((log, index) => {
-                log.x -= this.currentSpeed;
+            // Update logs with slower speed
+            this.logs.forEach(log => {
+                log.x -= this.baseSpeed; // Reduced from 1.5 to 1 times base speed
                 
                 if (!log.scored && log.x + this.logWidth < this.bird.x) {
                     log.scored = true;
-                    this.score++;
+                this.score++;
                 }
                 
                 if (this.checkCollision(log)) {
@@ -772,7 +772,7 @@ class FlappyBird {
     
     // Create a themed button with stone texture and glow effects
     drawDungeonButton(x, y, width, height, text) {
-        this.ctx.save();
+                this.ctx.save();
         
         // Add orange glow
         this.ctx.shadowColor = '#ff4400';
@@ -822,7 +822,7 @@ class FlappyBird {
     drawTitleScreen() {
         // Draw sky background first if loaded
         if (this.skyBgLoaded) {
-            this.ctx.drawImage(
+                this.ctx.drawImage(
                 this.skyBgImg,
                 0, 0,
                 this.canvas.width,
@@ -919,7 +919,7 @@ class FlappyBird {
             btn.y = this.canvas.height * 0.48;
             
             // Draw button without animation
-            this.ctx.drawImage(
+                this.ctx.drawImage(
                 this.startBtnImg,
                 btn.x,
                 btn.y,
@@ -1014,16 +1014,7 @@ class FlappyBird {
             // Calculate dimensions first
             const displayWidth = this.backgroundImg.width * 0.6;
             const displayHeight = displayWidth * (this.backgroundImg.height / this.backgroundImg.width);
-            const y = this.canvas.height - displayHeight - 48; // Adjusted from -50 to -48 to overlap with ground
-            
-            // Update background position if in playing state
-            if (this.isState(this.GameState.PLAYING)) {
-                this.backgroundOffset -= this.currentSpeed * this.backgroundScrollSpeed;
-                // Reset position for seamless scrolling
-                if (this.backgroundOffset <= -displayWidth) {
-                    this.backgroundOffset = 0;
-                }
-            }
+            const y = this.canvas.height - displayHeight - 48;
             
             // Draw copies for seamless scrolling - remove 1px gap between images
             for (let i = 0; i < 3; i++) {
@@ -1057,7 +1048,7 @@ class FlappyBird {
     }
 
     drawBird() {
-        this.ctx.save();
+            this.ctx.save();
         
         // Calculate bird dimensions maintaining aspect ratio
         const birdWidth = this.bird.size;
@@ -1076,31 +1067,31 @@ class FlappyBird {
         }
         
         this.ctx.translate(this.bird.x + birdWidth/2, this.bird.y + birdHeight/2);
-        this.ctx.rotate(rotation);
-        
-        // Select sprite frame
-        let column, row;
+            this.ctx.rotate(rotation);
+            
+            // Select sprite frame
+            let column, row;
         if (this.isState(this.GameState.DEAD) || this.isState(this.GameState.END)) {
-            column = 5;
-            row = 1;
-        } else {
-            column = this.spriteAnimation.currentFrame % this.spriteAnimation.framesPerRow;
-            row = Math.floor(this.spriteAnimation.currentFrame / this.spriteAnimation.framesPerRow);
-        }
-        
-        this.ctx.drawImage(
-            this.birdSprite,
-            column * this.spriteAnimation.frameWidth,
-            row * this.spriteAnimation.frameHeight,
-            this.spriteAnimation.frameWidth,
-            this.spriteAnimation.frameHeight,
+                column = 5;
+                row = 1;
+            } else {
+                column = this.spriteAnimation.currentFrame % this.spriteAnimation.framesPerRow;
+                row = Math.floor(this.spriteAnimation.currentFrame / this.spriteAnimation.framesPerRow);
+            }
+            
+            this.ctx.drawImage(
+                this.birdSprite,
+                column * this.spriteAnimation.frameWidth,
+                row * this.spriteAnimation.frameHeight,
+                this.spriteAnimation.frameWidth,
+                this.spriteAnimation.frameHeight,
             -birdWidth/2,
             -birdHeight/2,
             birdWidth,
             birdHeight
-        );
-        
-        this.ctx.restore();
+            );
+            
+            this.ctx.restore();
     }
 
     drawReadyOverlay() {
@@ -1109,8 +1100,8 @@ class FlappyBird {
             const textWidth = this.canvas.width * 0.7;
             const aspectRatio = this.getReadyImg.height / this.getReadyImg.width;
             const textHeight = textWidth * aspectRatio;
-            
-            this.ctx.drawImage(
+                
+                this.ctx.drawImage(
                 this.getReadyImg,
                 (this.canvas.width - textWidth) / 2,
                 this.canvas.height * 0.25,
@@ -1127,8 +1118,8 @@ class FlappyBird {
             
             const tapX = this.bird.x + this.bird.size + (this.canvas.width * 0.05);
             const tapY = this.bird.y + (this.bird.size / 2) - (tapHeight / 2);
-            
-            this.ctx.drawImage(
+                
+                this.ctx.drawImage(
                 this.tapTextImg,
                 tapX,
                 tapY,
@@ -1173,7 +1164,7 @@ class FlappyBird {
         // Draw score
         this.ctx.fillStyle = '#fff';
         this.ctx.font = `bold ${this.canvas.width * 0.06}px ${this.gameFont}`;
-        this.ctx.textAlign = 'center';
+            this.ctx.textAlign = 'center';
         this.ctx.strokeStyle = '#000';
         this.ctx.lineWidth = 3;
         this.ctx.strokeText(this.score.toString(), this.canvas.width / 2, 50);
@@ -1206,7 +1197,7 @@ class FlappyBird {
             }
             
             // Draw background with current animated position
-            this.ctx.drawImage(
+                    this.ctx.drawImage(
                 this.endBgImg,
                 (this.canvas.width - bgWidth) / 2,
                 this.endScreenAnimation.bgCurrentY,
@@ -1327,8 +1318,8 @@ class FlappyBird {
                 particle.size,
                 particle.size
             );
-            
-            this.ctx.restore();
+        
+        this.ctx.restore();
         });
     }
 } 
