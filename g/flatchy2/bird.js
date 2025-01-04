@@ -976,7 +976,7 @@ class FlappyBird {
             // Calculate dimensions first
             const displayWidth = this.backgroundImg.width * 0.6;
             const displayHeight = displayWidth * (this.backgroundImg.height / this.backgroundImg.width);
-            const y = this.canvas.height - displayHeight - 50;
+            const y = this.canvas.height - displayHeight - 48; // Adjusted from -50 to -48 to overlap with ground
             
             // Update background position if in playing state
             if (this.isState(this.GameState.PLAYING)) {
@@ -989,11 +989,11 @@ class FlappyBird {
             
             // Draw copies for seamless scrolling - remove 1px gap between images
             for (let i = 0; i < 3; i++) {
-                const x = Math.floor(this.backgroundOffset + (displayWidth * i)); // Use floor to prevent subpixel rendering
+                const x = Math.floor(this.backgroundOffset + (displayWidth * i));
                 this.ctx.drawImage(
                     this.backgroundImg,
                     x, y,
-                    displayWidth + 1, // Add 1px overlap
+                    displayWidth + 1,
                     displayHeight
                 );
             }
@@ -1002,17 +1002,18 @@ class FlappyBird {
 
     drawGround() {
         if (this.groundLoaded) {
-            const y = this.canvas.height - 50;
-            this.ctx.drawImage(
-                this.groundImg,
-                this.groundOffset, y,
-                this.groundImg.width, 50
-            );
-            this.ctx.drawImage(
-                this.groundImg,
-                this.groundOffset + this.groundImg.width, y,
-                this.groundImg.width, 50
-            );
+            const groundY = this.canvas.height - 50;
+            const groundHeight = 50;
+            const groundWidth = groundHeight * (this.groundImg.width / this.groundImg.height); // Maintain aspect ratio
+            
+            // Draw multiple copies of the ground to fill the width
+            for (let x = this.groundOffset; x < this.canvas.width + groundWidth; x += groundWidth) {
+                this.ctx.drawImage(
+                    this.groundImg,
+                    x, groundY,
+                    groundWidth, groundHeight
+                );
+            }
         }
     }
 
