@@ -111,13 +111,13 @@ class FlappyBird {
         document.body.appendChild(this.canvas);
         this.ctx = this.canvas.getContext('2d');
         
-        // Setup bird physics
+        // Setup bird physics with adjusted values
         this.bird = {
             x: this.canvas.width * 0.2,
             y: this.canvas.height * 0.4,
             velocity: 0,
-            gravity: this.canvas.height * 0.0004,
-            jump: this.canvas.height * -0.012,
+            gravity: this.canvas.height * 0.0006,
+            jump: this.canvas.height * -0.0135,
             size: this.canvas.width * 0.12
         };
         
@@ -559,7 +559,15 @@ class FlappyBird {
         
         // Generate new logs
         if (now - this.lastLog > this.logInterval) {
-            const logY = Math.random() * (this.canvas.height - this.logGap - 100) + 50;
+            // Calculate the middle 50% of the screen height
+            const screenMiddle = this.canvas.height * 0.5;
+            const playableArea = this.canvas.height * 0.5; // 50% of screen height
+            const minY = screenMiddle - (playableArea / 2);
+            const maxY = screenMiddle + (playableArea / 2) - this.logGap;
+            
+            // Generate log position within the restricted area
+            const logY = minY + (Math.random() * (maxY - minY));
+            
             this.logs.push({
                 x: this.canvas.width,
                 y: logY,
@@ -621,8 +629,8 @@ class FlappyBird {
             x: this.canvas.width * 0.2,
             y: this.canvas.height * 0.4,
             velocity: 0,
-            gravity: this.canvas.height * 0.0004,
-            jump: this.canvas.height * -0.012,
+            gravity: this.canvas.height * 0.0006,
+            jump: this.canvas.height * -0.0135,
             size: this.canvas.width * 0.12
         };
         this.logs = [];
@@ -966,8 +974,8 @@ class FlappyBird {
             x: this.canvas.width * 0.2,
             y: this.canvas.height * 0.4,
             velocity: 0,
-            gravity: this.canvas.height * 0.0004,
-            jump: this.canvas.height * -0.012,
+            gravity: this.canvas.height * 0.0006,
+            jump: this.canvas.height * -0.0135,
             size: this.canvas.width * 0.12
         };
     }
