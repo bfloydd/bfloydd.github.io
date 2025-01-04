@@ -117,8 +117,8 @@ class FlappyBird {
             y: this.canvas.height * 0.4,
             velocity: 0,
             gravity: this.canvas.height * 0.00045,
-            jump: this.canvas.height * -0.012,
-            size: this.canvas.width * 0.15
+            jump: this.canvas.height * -0.011,
+            size: this.canvas.width * 0.17
         };
         
         // Setup game speed and obstacles
@@ -676,8 +676,8 @@ class FlappyBird {
             y: this.canvas.height * 0.4,
             velocity: 0,
             gravity: this.canvas.height * 0.00045,
-            jump: this.canvas.height * -0.012,
-            size: this.canvas.width * 0.15
+            jump: this.canvas.height * -0.011,
+            size: this.canvas.width * 0.17
         };
         this.logs = [];
         this.lastLog = 0;
@@ -1020,8 +1020,8 @@ class FlappyBird {
             y: this.canvas.height * 0.4,
             velocity: 0,
             gravity: this.canvas.height * 0.00045,
-            jump: this.canvas.height * -0.012,
-            size: this.canvas.width * 0.15
+            jump: this.canvas.height * -0.011,
+            size: this.canvas.width * 0.17
         };
     }
 
