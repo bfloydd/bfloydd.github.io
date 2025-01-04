@@ -513,88 +513,89 @@ class FlappyBird {
             }
         }
 
+        // Update scrolling for READY and PLAYING states only
+        if (this.isState(this.GameState.READY) || this.isState(this.GameState.PLAYING)) {
+            // Scroll ground texture
+            if (this.groundLoaded) {
+                this.groundOffset -= this.currentSpeed;
+                if (this.groundOffset <= -this.groundImg.width) {
+                    this.groundOffset = 0;
+                }
+            }
+
+            // Update background position for parallax
+            if (this.backgroundLoaded) {
+                this.backgroundOffset -= this.currentSpeed * this.backgroundScrollSpeed;
+                if (this.backgroundOffset <= -this.backgroundImg.width * 0.6) {
+                    this.backgroundOffset = 0;
+                }
+            }
+        }
+
+        // Only handle logs in PLAYING state
+        if (this.isState(this.GameState.PLAYING)) {
+            const now = Date.now();
+            
+            // Generate new logs
+            if (now - this.lastLog > this.logInterval) {
+                const screenMiddle = this.canvas.height * 0.5;
+                const playableArea = this.canvas.height * 0.5;
+                const minY = screenMiddle - (playableArea / 2);
+                const maxY = screenMiddle + (playableArea / 2) - this.logGap;
+                
+                const logY = minY + (Math.random() * (maxY - minY));
+                
+                this.logs.push({
+                    x: this.canvas.width,
+                    y: logY,
+                    scored: false
+                });
+                this.lastLog = now;
+            }
+            
+            // Update logs
+            this.logs.forEach((log, index) => {
+                log.x -= this.currentSpeed;
+                
+                if (!log.scored && log.x + this.logWidth < this.bird.x) {
+                    log.scored = true;
+                    this.score++;
+                }
+                
+                if (this.checkCollision(log)) {
+                    this.setState(this.GameState.DEAD);
+                    return;
+                }
+            });
+            
+            // Remove off-screen logs
+            this.logs = this.logs.filter(log => log.x + this.logWidth > 0);
+            
+            // Update bird physics
+            this.bird.velocity += this.bird.gravity;
+            this.bird.y += this.bird.velocity;
+        }
+
+        // Handle DEAD state separately
         if (this.isState(this.GameState.DEAD)) {
-            // Apply stronger gravity when dead
             this.bird.velocity += this.bird.gravity * 1.5;
             this.bird.y += this.bird.velocity;
             
-            // Check ground collision
+            // Transition to END state when bird hits ground
             if (this.bird.y + this.bird.size > this.canvas.height - 50) {
                 this.bird.y = this.canvas.height - 50 - this.bird.size;
                 this.setState(this.GameState.END);
             }
-            return;
-        }
-        
-        // Only update game logic in PLAYING state
-        if (!this.isState(this.GameState.PLAYING)) return;
-        
-        // Scroll ground texture
-        if (this.groundLoaded) {
-            this.groundOffset -= this.currentSpeed;
-            if (this.groundOffset <= -this.groundImg.width) {
-                this.groundOffset = 0;
-            }
         }
 
-        // Apply gravity and update bird position
-        this.bird.velocity += this.bird.gravity;
-        this.bird.y += this.bird.velocity;
-        
-        // Check ground collision
-        if (this.bird.y + this.bird.size > this.canvas.height - 50) {
-            this.bird.y = this.canvas.height - 50 - this.bird.size;
-            this.setState(this.GameState.DEAD);
-            return;
-        }
-        
-        // Check ceiling collision
-        if (this.bird.y < 0) {
-            this.bird.y = 0;
-            this.setState(this.GameState.DEAD);
-            return;
-        }
-
-        const now = Date.now();
-        
-        // Generate new logs
-        if (now - this.lastLog > this.logInterval) {
-            // Calculate the middle 50% of the screen height
-            const screenMiddle = this.canvas.height * 0.5;
-            const playableArea = this.canvas.height * 0.5; // 50% of screen height
-            const minY = screenMiddle - (playableArea / 2);
-            const maxY = screenMiddle + (playableArea / 2) - this.logGap;
-            
-            // Generate log position within the restricted area
-            const logY = minY + (Math.random() * (maxY - minY));
-            
-            this.logs.push({
-                x: this.canvas.width,
-                y: logY,
-                scored: false
-            });
-            this.lastLog = now;
-        }
-        
-        // Update logs
-        this.logs.forEach((log, index) => {
-            log.x -= this.currentSpeed;
-            
-            // Check for score
-            if (!log.scored && log.x + this.logWidth < this.bird.x) {
-                log.scored = true;
-                this.score++;
-            }
-            
-            // Check for collisions
-            if (this.checkCollision(log)) {
+        // Check ceiling collision in PLAYING state
+        if (this.isState(this.GameState.PLAYING)) {
+            if (this.bird.y < 0) {
+                this.bird.y = 0;
                 this.setState(this.GameState.DEAD);
                 return;
             }
-        });
-        
-        // Remove off-screen logs
-        this.logs = this.logs.filter(log => log.x + this.logWidth > 0);
+        }
 
         // Update feather particles
         this.featherParticles = this.featherParticles.filter(particle => {
@@ -709,8 +710,7 @@ class FlappyBird {
                 
             case this.GameState.READY:
                 this.drawSkyAndHills();
-                this.drawLogs();  // Draw logs before ground
-                this.drawGround();  // Draw ground after logs
+                this.drawGround();
                 this.drawBird();
                 this.drawFeatherParticles();
                 this.drawReadyOverlay();
@@ -718,8 +718,8 @@ class FlappyBird {
                 
             case this.GameState.PLAYING:
                 this.drawSkyAndHills();
-                this.drawLogs();  // Draw logs before ground
-                this.drawGround();  // Draw ground after logs
+                this.drawLogs();
+                this.drawGround();
                 this.drawBird();
                 this.drawFeatherParticles();
                 this.drawHUD();
@@ -727,8 +727,8 @@ class FlappyBird {
                 
             case this.GameState.END:
                 this.drawSkyAndHills();
-                this.drawLogs();  // Draw logs before ground
-                this.drawGround();  // Draw ground after logs
+                this.drawLogs();
+                this.drawGround();
                 this.drawBird();
                 this.drawFeatherParticles();
                 this.drawGameOverOverlay();
@@ -736,8 +736,8 @@ class FlappyBird {
                 
             case this.GameState.DEAD:
                 this.drawSkyAndHills();
-                this.drawLogs();  // Draw logs before ground
-                this.drawGround();  // Draw ground after logs
+                this.drawLogs();
+                this.drawGround();
                 this.drawBird();
                 this.drawFeatherParticles();
                 this.drawHUD();
