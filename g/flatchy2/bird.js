@@ -643,27 +643,39 @@ class FlappyBird {
     }
     
     checkCollision(log) {
+        // Create a smaller hitbox for the bird (about 75% of visual size)
+        const hitboxReduction = this.bird.size * 0.25;
         const birdBox = {
-            left: this.bird.x,
-            right: this.bird.x + this.bird.size,
-            top: this.bird.y,
-            bottom: this.bird.y + this.bird.size
+            left: this.bird.x + hitboxReduction,
+            right: this.bird.x + this.bird.size - hitboxReduction,
+            top: this.bird.y + hitboxReduction,
+            bottom: this.bird.y + this.bird.size - hitboxReduction
         };
         
-        // Top log
+        // Calculate actual log height based on aspect ratio
+        const logAspectRatio = this.treeImg.height / this.treeImg.width;
+        const logHeight = this.logWidth * logAspectRatio;
+        
+        // Add padding to log hitbox to match visible trunk (40% padding on each side)
+        const logPadding = this.logWidth * 0.4; // Increased from 0.2 to 0.4 to make hitbox even smaller
+        
+        // Only check collision with the actual trunk parts
+        const trunkHeight = logHeight * 0.6; // Only check collision with the trunk portion
+        
+        // Top log (flipped)
         const topLogBox = {
-            left: log.x,
-            right: log.x + this.logWidth,
-            top: 0,
+            left: log.x + logPadding,
+            right: log.x + this.logWidth - logPadding,
+            top: log.y - trunkHeight, // Only check trunk portion
             bottom: log.y
         };
         
         // Bottom log
         const bottomLogBox = {
-            left: log.x,
-            right: log.x + this.logWidth,
+            left: log.x + logPadding,
+            right: log.x + this.logWidth - logPadding,
             top: log.y + this.logGap,
-            bottom: this.canvas.height
+            bottom: log.y + this.logGap + trunkHeight // Only check trunk portion
         };
         
         return this.checkBoxCollision(birdBox, topLogBox) || 
