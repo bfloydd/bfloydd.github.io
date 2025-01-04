@@ -128,7 +128,7 @@ class FlappyBird {
         this.logs = [];
         this.logWidth = this.canvas.width * 0.25;
         this.logGap = this.canvas.height * 0.25;
-        this.logInterval = 2000;
+        this.logInterval = 1400;
         this.lastLog = 0;
         
         // Setup scoring and game state
