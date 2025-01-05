@@ -461,7 +461,7 @@ class FlappyBird {
                     break;
                     
                 case this.GameState.PLAYING:
-                    this.bird.velocity = this.bird.jump;
+            this.bird.velocity = this.bird.jump;
                     
                     // Play either whoosh or fart sound (35% chance for fart)
                     if (Math.random() < 0.35) {
@@ -520,11 +520,11 @@ class FlappyBird {
                     if (!this.endScreenAnimation.isAnimating && 
                         this.playBtnLoaded && 
                         clickX >= this.restartButton.x && 
-                        clickX <= this.restartButton.x + this.restartButton.width &&
-                        clickY >= this.restartButton.y && 
-                        clickY <= this.restartButton.y + this.restartButton.height) {
-                        handleInput();
-                    }
+                    clickX <= this.restartButton.x + this.restartButton.width &&
+                    clickY >= this.restartButton.y && 
+                    clickY <= this.restartButton.y + this.restartButton.height) {
+                    handleInput();
+                }
                     break;
             }
         };
@@ -881,7 +881,7 @@ class FlappyBird {
     drawTitleScreen() {
         // Draw sky background first if loaded
         if (this.skyBgLoaded) {
-            this.ctx.drawImage(
+                this.ctx.drawImage(
                 this.skyBgImg,
                 0, 0,
                 this.canvas.width,
@@ -932,8 +932,8 @@ class FlappyBird {
             const groundWidth = groundHeight * (this.groundImg.width / this.groundImg.height);
             
             for (let x = Math.floor(this.groundOffset); x < this.canvas.width + groundWidth; x += groundWidth) {
-                this.ctx.drawImage(
-                    this.groundImg,
+            this.ctx.drawImage(
+                this.groundImg,
                     x, groundY,
                     groundWidth + 1,
                     groundHeight
@@ -989,7 +989,7 @@ class FlappyBird {
             btn.y = this.canvas.height * 0.48;
             
             // Draw button without animation
-            this.ctx.drawImage(
+                this.ctx.drawImage(
                 this.startBtnImg,
                 btn.x,
                 btn.y,
@@ -1098,7 +1098,7 @@ class FlappyBird {
     drawSkyAndHills() {
         // Draw sky background (static)
         if (this.skyBgLoaded) {
-            this.ctx.drawImage(
+                this.ctx.drawImage(
                 this.skyBgImg,
                 0, 0,
                 this.canvas.width,
@@ -1234,8 +1234,8 @@ class FlappyBird {
             
             const tapX = this.bird.x + this.bird.size + (this.canvas.width * 0.15); // Increased from 0.1 to 0.15
             const tapY = this.bird.y + (this.bird.size / 2) - (tapHeight / 2);
-            
-            this.ctx.drawImage(
+                
+                this.ctx.drawImage(
                 this.tapTextImg,
                 tapX,
                 tapY,
@@ -1280,7 +1280,7 @@ class FlappyBird {
         // Draw score
         this.ctx.fillStyle = '#fff';
         this.ctx.font = `bold ${this.canvas.width * 0.06}px ${this.gameFont}`;
-            this.ctx.textAlign = 'center';
+                this.ctx.textAlign = 'center';
         this.ctx.strokeStyle = '#000';
         this.ctx.lineWidth = 3;
         this.ctx.strokeText(this.score.toString(), this.canvas.width / 2, 50);
@@ -1329,8 +1329,8 @@ class FlappyBird {
                     const medalSize = this.canvas.width * 0.15;
                     const medalX = this.canvas.width * 0.25;
                     const medalY = this.endScreenAnimation.bgCurrentY + bgHeight * 0.35;
-                    
-                    this.ctx.drawImage(
+                
+                this.ctx.drawImage(
                         this.currentMedal,
                         medalX,
                         medalY,
@@ -1383,7 +1383,7 @@ class FlappyBird {
                 };
                 
                 // Draw the play button
-                this.ctx.drawImage(
+                    this.ctx.drawImage(
                     this.playBtnImg,
                     buttonX,
                     buttonY,
@@ -1392,15 +1392,15 @@ class FlappyBird {
                 );
 
                 // Draw plain button below play button with same dimensions
-                if (this.plainBtnLoaded) {
+            if (this.plainBtnLoaded) {
                     const plainBtnY = buttonY + btnHeight + 20; // 20px gap between buttons
-                    this.ctx.drawImage(
-                        this.plainBtnImg,
+                this.ctx.drawImage(
+                    this.plainBtnImg,
                         buttonX,
                         plainBtnY,
-                        btnWidth,
-                        btnHeight
-                    );
+                    btnWidth,
+                    btnHeight
+                );
                 }
             }
         }
