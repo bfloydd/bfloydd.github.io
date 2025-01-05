@@ -401,6 +401,9 @@ class FlappyBird {
 
         // Initialize some clouds
         this.initializeClouds();
+
+        // Load click sound
+        this.clickSound = new Audio('audio/click.wav');
     }
     
     init() {
@@ -422,29 +425,35 @@ class FlappyBird {
             
             switch (this.currentState) {
                 case this.GameState.TITLE:
+                    // Play click for title screen button
+                    this.clickSound.currentTime = 0;
+                    this.clickSound.play();
                     this.setState(this.GameState.READY);
                     break;
+                    
                 case this.GameState.READY:
                     this.setState(this.GameState.PLAYING);
                     break;
+                    
                 case this.GameState.PLAYING:
-            this.bird.velocity = this.bird.jump;
+                    this.bird.velocity = this.bird.jump;
                     
                     // Play either whoosh or fart sound (35% chance for fart)
                     if (Math.random() < 0.35) {
-                        // Play random fart sound
                         const randomIndex = Math.floor(Math.random() * this.fartSounds.length);
                         this.fartSounds[randomIndex].currentTime = 0;
                         this.fartSounds[randomIndex].play();
-                        // Create feather burst when tooting
                         this.createFeatherBurst();
                     } else {
-                        // Play whoosh sound
                         this.whooshSound.currentTime = 0;
                         this.whooshSound.play();
                     }
                     break;
+                    
                 case this.GameState.END:
+                    // Play click for end screen button
+                    this.clickSound.currentTime = 0;
+                    this.clickSound.play();
                     this.setState(this.GameState.READY);
                     break;
             }
@@ -455,17 +464,22 @@ class FlappyBird {
             e.preventDefault();
             
             const rect = this.canvas.getBoundingClientRect();
-            // Account for canvas scaling
             const scaleX = this.canvas.width / rect.width;
             const scaleY = this.canvas.height / rect.height;
             
-            // Calculate click position with scaling
             const clickX = ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * scaleX;
             const clickY = ((e.touches ? e.touches[0].clientY : e.clientY) - rect.top) * scaleY;
             
             switch (this.currentState) {
                 case this.GameState.TITLE:
-                    handleInput();
+                    // Check if click is on start button
+                    const titleBtn = this.titleScreenElements.startButton;
+                    if (clickX >= titleBtn.x && 
+                        clickX <= titleBtn.x + titleBtn.width &&
+                        clickY >= titleBtn.y && 
+                        clickY <= titleBtn.y + titleBtn.height) {
+                        handleInput();
+                    }
                     break;
                     
                 case this.GameState.READY:
@@ -477,14 +491,14 @@ class FlappyBird {
                     break;
                     
                 case this.GameState.END:
-                    // Only check button click if animation is complete
+                    // Check if click is on play button
                     if (!this.endScreenAnimation.isAnimating && 
                         this.playBtnLoaded && 
                         clickX >= this.restartButton.x && 
-                    clickX <= this.restartButton.x + this.restartButton.width &&
-                    clickY >= this.restartButton.y && 
-                    clickY <= this.restartButton.y + this.restartButton.height) {
-                        this.setState(this.GameState.READY); // Directly set state instead of using handleInput
+                        clickX <= this.restartButton.x + this.restartButton.width &&
+                        clickY >= this.restartButton.y && 
+                        clickY <= this.restartButton.y + this.restartButton.height) {
+                        handleInput();
                     }
                     break;
             }
