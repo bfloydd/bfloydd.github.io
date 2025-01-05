@@ -404,6 +404,9 @@ class FlappyBird {
 
         // Load click sound
         this.clickSound = new Audio('audio/click.wav');
+
+        // Add best score tracking
+        this.bestScore = 0;
     }
     
     init() {
@@ -1286,21 +1289,26 @@ class FlappyBird {
             
             // Draw scores when animation is complete
             if (!this.endScreenAnimation.isAnimating) {
-                // Draw current score
+                // Update best score if current score is higher
+                this.bestScore = Math.max(this.score, this.bestScore);
+                
+                // Set up text properties
                 this.ctx.fillStyle = '#000';
                 this.ctx.font = `bold ${this.canvas.width * 0.08}px ${this.gameFont}`;
                 this.ctx.textAlign = 'right';
+                
+                // Draw current score (SCORE)
                 this.ctx.fillText(
                     this.score.toString(),
                     this.canvas.width * 0.7,
-                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.3
+                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.35
                 );
                 
-                // Draw best score
+                // Draw best score (BEST) - moved lower
                 this.ctx.fillText(
-                    '6',  // Replace with actual best score logic
+                    this.bestScore.toString(),
                     this.canvas.width * 0.7,
-                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.5
+                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.35 + 100 // Increased from 80 to 100
                 );
             }
             
@@ -1308,7 +1316,7 @@ class FlappyBird {
             if (this.playBtnLoaded) {
                 const btnWidth = this.canvas.width * 0.5; // Changed from 0.4 to 0.5 to match start button
                 const aspectRatio = this.playBtnImg.height / this.playBtnImg.width;
-                const btnHeight = btnWidth * (this.startBtnImg.height / this.startBtnImg.width); // Use start button aspect ratio
+                const btnHeight = btnWidth * aspectRatio;
                 
                 // Calculate button position based on animation
                 const baseY = this.canvas.height * 0.45;
