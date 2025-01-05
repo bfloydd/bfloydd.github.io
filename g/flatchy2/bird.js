@@ -29,7 +29,7 @@ class FlappyBird {
         this.birdSprite.onerror = (e) => {
             console.error('Error loading sprite:', e);
         };
-        this.birdSprite.src = 'images/flatchy_flap_sprite.png';
+        this.birdSprite.src = 'images/flatchy/flatchy_flap_sprite.png';
 
         // Load background assets
         this.backgroundImg = new Image();
@@ -37,7 +37,7 @@ class FlappyBird {
             this.backgroundLoaded = true;
             this.backgroundAspectRatio = this.backgroundImg.height / this.backgroundImg.width;
         };
-        this.backgroundImg.src = 'images/hills.png';
+        this.backgroundImg.src = 'images/game/hills.png';
         this.backgroundLoaded = false;
 
         this.groundImg = new Image();
@@ -52,7 +52,7 @@ class FlappyBird {
         this.treeImg.onload = () => {
             this.treeLoaded = true;
         };
-        this.treeImg.src = 'images/tree.png';
+        this.treeImg.src = 'images/game/tree.png';
         this.treeLoaded = false;
 
         // Load feather trail effects
@@ -221,26 +221,18 @@ class FlappyBird {
             minInterval: 3000
         };
         
-        // Load game assets
-        this.gameOverImg = new Image();
-        this.gameOverImg.onload = () => {
-            this.gameOverImgLoaded = true;
-        };
-        this.gameOverImg.src = 'images/game_over_text.png';
-        this.gameOverImgLoaded = false;
-        
         this.startBtnImg = new Image();
         this.startBtnImg.onload = () => {
             this.startBtnLoaded = true;
         };
-        this.startBtnImg.src = 'images/start_btn_up.png';
+        this.startBtnImg.src = 'images/ui/btns/start_btn_up.png';
         this.startBtnLoaded = false;
         
         this.plainBtnImg = new Image();
         this.plainBtnImg.onload = () => {
             this.plainBtnLoaded = true;
         };
-        this.plainBtnImg.src = 'images/plain_btn.png';
+        this.plainBtnImg.src = 'images/ui/btns/plain_btn.png';
         this.plainBtnLoaded = false;
         
         this.titleLogoImg = new Image();
