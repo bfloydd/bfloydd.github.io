@@ -407,6 +407,28 @@ class FlappyBird {
 
         // Add best score tracking
         this.bestScore = 0;
+
+        // Load medal images
+        this.medal1Img = new Image();
+        this.medal1Img.onload = () => {
+            this.medal1Loaded = true;
+        };
+        this.medal1Img.src = 'images/end/medal_1.png';
+        
+        this.medal2Img = new Image();
+        this.medal2Img.onload = () => {
+            this.medal2Loaded = true;
+        };
+        this.medal2Img.src = 'images/end/medal_2.png';
+        
+        this.medal3Img = new Image();
+        this.medal3Img.onload = () => {
+            this.medal3Loaded = true;
+        };
+        this.medal3Img.src = 'images/end/medal_3.png';
+
+        // Add medal state
+        this.currentMedal = null;
     }
     
     init() {
@@ -1021,6 +1043,19 @@ class FlappyBird {
                 this.hitSound.play();
                 break;
             case this.GameState.END:
+                // Determine medal when entering end state
+                const isNewBest = this.score > this.bestScore;
+                if (isNewBest) {
+                    this.currentMedal = this.medal3Img;
+                } else if (this.score > 3) {
+                    this.currentMedal = this.medal2Img;
+                } else {
+                    this.currentMedal = this.medal1Img;
+                }
+                
+                // Update best score after determining medal
+                this.bestScore = Math.max(this.score, this.bestScore);
+                
                 // Reset and start end screen animation with higher position
                 this.endScreenAnimation.bgStartY = -this.canvas.height * 0.5;
                 this.endScreenAnimation.bgTargetY = this.canvas.height * 0.1; // Changed from 0.2 to 0.1
@@ -1114,7 +1149,7 @@ class FlappyBird {
         if (this.groundLoaded) {
             const groundY = this.canvas.height - 50;
             const groundHeight = 50;
-            const groundWidth = groundHeight * (this.groundImg.width / this.groundImg.height); // Maintain aspect ratio
+            const groundWidth = groundHeight * (this.groundImg.width / this.groundImg.height);
             
             // Draw multiple copies of the ground to fill the width, adding 1px overlap
             for (let x = Math.floor(this.groundOffset); x < this.canvas.width + groundWidth; x += groundWidth) {
@@ -1289,8 +1324,20 @@ class FlappyBird {
             
             // Draw scores when animation is complete
             if (!this.endScreenAnimation.isAnimating) {
-                // Update best score if current score is higher
-                this.bestScore = Math.max(this.score, this.bestScore);
+                // Draw medal if loaded
+                if (this.currentMedal && this.currentMedal.complete) {
+                    const medalSize = this.canvas.width * 0.15;
+                    const medalX = this.canvas.width * 0.25;
+                    const medalY = this.endScreenAnimation.bgCurrentY + bgHeight * 0.35;
+                    
+                    this.ctx.drawImage(
+                        this.currentMedal,
+                        medalX,
+                        medalY,
+                        medalSize,
+                        medalSize
+                    );
+                }
                 
                 // Set up text properties
                 this.ctx.fillStyle = '#000';
