@@ -1300,15 +1300,15 @@ class FlappyBird {
                 // Draw current score (SCORE)
                 this.ctx.fillText(
                     this.score.toString(),
-                    this.canvas.width * 0.7,
-                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.35
+                    this.canvas.width * 0.75,
+                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.42
                 );
                 
-                // Draw best score (BEST) - moved lower
+                // Draw best score (BEST) - moved slightly right
                 this.ctx.fillText(
                     this.bestScore.toString(),
-                    this.canvas.width * 0.7,
-                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.35 + 100 // Increased from 80 to 100
+                    this.canvas.width * 0.77, // Increased from 0.75 to 0.77
+                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.35 + 100
                 );
             }
             
