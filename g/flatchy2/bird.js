@@ -902,14 +902,14 @@ class FlappyBird {
             }
         }
         
-        // Draw rest of title screen elements (logo, flatchy, start button)
+        // Draw title logo higher
         if (this.titleLogoLoaded) {
             // Animate logo
             const logo = this.titleScreenElements.logo;
             logo.width = this.canvas.width * 0.8;
             logo.height = logo.width * (this.titleLogoImg.height / this.titleLogoImg.width);
             logo.x = (this.canvas.width - logo.width) / 2;
-            logo.y = this.canvas.height * 0.35;
+            logo.y = this.canvas.height * 0.25; // Changed from 0.35 to 0.25 to move logo higher
             
             // Draw logo with slight bounce effect
             const bounce = Math.sin(Date.now() / 1000) * 5;
@@ -1174,16 +1174,16 @@ class FlappyBird {
             );
         }
         
-        // Draw tap text next to bird
+        // Draw tap text next to bird - moved further right
         if (this.tapTextLoaded) {
             const tapWidth = this.canvas.width * 0.2;
             const aspectRatio = this.tapTextImg.height / this.tapTextImg.width;
             const tapHeight = tapWidth * aspectRatio;
             
-            const tapX = this.bird.x + this.bird.size + (this.canvas.width * 0.05);
+            const tapX = this.bird.x + this.bird.size + (this.canvas.width * 0.15); // Increased from 0.1 to 0.15
             const tapY = this.bird.y + (this.bird.size / 2) - (tapHeight / 2);
-                
-                this.ctx.drawImage(
+            
+            this.ctx.drawImage(
                 this.tapTextImg,
                 tapX,
                 tapY,
