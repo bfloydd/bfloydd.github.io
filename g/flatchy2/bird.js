@@ -1162,14 +1162,10 @@ class FlappyBird {
         const birdWidth = this.bird.size;
         const birdHeight = birdWidth * (this.spriteAnimation.frameHeight / this.spriteAnimation.frameWidth);
         
-        // Tilt bird based on velocity and state
+        // Tilt bird based on state
         let rotation = 0;
         if (this.isState(this.GameState.PLAYING)) {
-            if (this.bird.velocity < 0) {
-                rotation = -0.2;
-            } else if (this.bird.velocity > 0) {
-                rotation = 0.2;
-            }
+            rotation = -0.25; // Reduced from -0.4 to -0.25 for a more subtle upward tilt
         } else if (this.isState(this.GameState.DEAD) || this.isState(this.GameState.END)) {
             rotation = Math.min(Math.PI / 2, this.bird.velocity * 0.1);
         }
