@@ -113,7 +113,7 @@ class FlappyBird {
         
         // Setup bird physics with adjusted values
         this.bird = {
-            x: this.canvas.width * 0.2,
+            x: this.canvas.width * 0.25,
             y: this.canvas.height * 0.4,
             velocity: 0,
             gravity: this.canvas.height * 0.00045,
@@ -1417,11 +1417,11 @@ class FlappyBird {
                 const birdHeight = birdWidth * (this.spriteAnimation.frameHeight / this.spriteAnimation.frameWidth);
                 
                 // Calculate spawn position at bird's rear
-                const spawnX = this.bird.x + birdWidth * 0.1;  // Just slightly offset from bird's left edge
-                const spawnY = this.bird.y + birdHeight/2; // Center Y of bird
+                const spawnX = this.bird.x + birdWidth * 0.3;  // Moved from 0.6 to 0.3 to spawn more towards left
+                const spawnY = this.bird.y + birdHeight * 0.4;
                 
                 // Calculate burst velocity
-                const burstSpeed = 2.5 + Math.random() * 1; // Increased initial burst speed for more explosive effect
+                const burstSpeed = 2.5 + Math.random() * 1;
                 const angle = Math.PI + (Math.random() * 1.2 - 0.6); // Keep same wide spread angle
                 const speedX = Math.cos(angle) * burstSpeed;
                 const speedY = Math.sin(angle) * burstSpeed;
