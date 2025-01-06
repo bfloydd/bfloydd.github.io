@@ -1403,7 +1403,7 @@ class FlappyBird {
         
         // Only create particles if we have loaded feather images
         if (featherImages.length > 0) {
-            const numFeathers = 8; // Increased from 4 to 8 feathers per burst
+            const numFeathers = 6; // Reduced from 8 to 6 feathers per burst
             
             for (let i = 0; i < numFeathers; i++) {
                 // Randomly select a feather image
