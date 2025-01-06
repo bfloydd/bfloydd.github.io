@@ -105,11 +105,6 @@ export class FlappyBird {
             lastFrameTime: 0
         };
         
-        // Difficulty scaling parameters
-        this.startingLevel = 1;
-        this.speedIncreasePerLevel = 0.5;
-        this.pillarSpaceIncreasePerLevel = .05;
-        
         // Canvas setup with mobile-friendly dimensions (16:9 aspect ratio)
         this.canvas = document.createElement('canvas');
         this.canvas.width = 400;
@@ -129,7 +124,7 @@ export class FlappyBird {
         
         // Game speed and obstacle settings
         this.baseSpeed = 4.5;
-        this.currentSpeed = this.baseSpeed * (1 + (this.startingLevel - 1) * this.speedIncreasePerLevel);
+        this.currentSpeed = this.baseSpeed;
         
         this.logs = [];
         this.logWidth = this.canvas.width * 0.25;
@@ -139,7 +134,6 @@ export class FlappyBird {
         
         // Score tracking
         this.score = 0;
-        this.levelScore = 0;
         this.gameStarted = false;
         this.gameOver = false;
         
@@ -156,43 +150,6 @@ export class FlappyBird {
             y: 0,
             width: this.canvas.width * 0.4,
             height: this.canvas.width * 0.4 * 0.25
-        };
-        
-        // Ambient fire effect configuration
-        this.fireBase = {
-            flames: Array(20).fill().map((_, i) => ({
-                x: i * (this.canvas.width / 19),
-                size: Math.random() * 10 + 30,
-                offset: Math.random() * Math.PI
-            }))
-        };
-        
-        // Level completion UI
-        this.levelComplete = false;
-        this.continueButton = {
-            x: this.canvas.width * 0.25,
-            y: this.canvas.height * 0.6,
-            width: this.canvas.width * 0.5,
-            height: this.canvas.height * 0.1
-        };
-        
-        // Victory flash effect settings
-        this.flashEffect = {
-            active: false,
-            duration: 60,
-            currentFrame: 0,
-            colors: ['#FF0000', '#00FF00', '#0000FF', '#FF00FF', '#FFFF00']
-        };
-        
-        this.currentLevel = this.startingLevel;
-        
-        // Background torch effects
-        this.background = {
-            torches: Array(4).fill().map((_, i) => ({
-                x: i * (this.canvas.width / 3),
-                y: 60 + (i % 2) * 30,
-                flameOffset: Math.random() * Math.PI
-            }))
         };
         
         // Load UI assets
@@ -384,11 +341,8 @@ export class FlappyBird {
     }
     
     init() {
-        this.bosses = [];
-        this.bossHasAppeared = false;
-        
-        // Initialize game speed based on current level
-        this.currentSpeed = this.baseSpeed * (1 + (this.startingLevel - 1) * this.speedIncreasePerLevel);
+        // Initialize game speed
+        this.currentSpeed = this.baseSpeed;
         
         if (!this.gameLoopStarted) {
             this.gameLoopStarted = true;
@@ -631,13 +585,7 @@ export class FlappyBird {
         }
     }
     
-    startLevel(levelNumber) {
-        this.currentLevel = levelNumber;
-        this.levelScore = 0;
-        
-        // Scale difficulty based on level number
-        this.currentSpeed = this.baseSpeed * (1 + (levelNumber - 1) * this.speedIncreasePerLevel);
-        
+    startLevel() {
         // Reset game state
         this.bird = {
             x: this.canvas.width * 0.2,
@@ -651,10 +599,6 @@ export class FlappyBird {
         this.lastLog = 0;
         this.gameStarted = true;
         this.gameOver = false;
-        this.levelComplete = false;
-        
-        this.flashEffect.active = false;
-        this.flashEffect.currentFrame = 0;
         
         cancelAnimationFrame(this.animationFrame);
         this.gameLoopStarted = true;
