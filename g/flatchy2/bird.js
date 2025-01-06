@@ -234,13 +234,6 @@ export class FlappyBird {
         // Ready state assets
         this.isReadyState = false;
         
-        this.tapIconImg = new Image();
-        this.tapIconImg.onload = () => {
-            this.tapIconLoaded = true;
-        };
-        this.tapIconImg.src = 'images/tap_icon.png';
-        this.tapIconLoaded = false;
-        
         this.getReadyImg = new Image();
         this.getReadyImg.onload = () => {
             this.getReadyLoaded = true;
