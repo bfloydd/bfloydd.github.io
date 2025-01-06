@@ -167,8 +167,6 @@ export class FlappyBird {
             }))
         };
         
-        this.bosses = [];
-        
         // Level completion UI
         this.levelComplete = false;
         this.continueButton = {
@@ -195,34 +193,6 @@ export class FlappyBird {
                 y: 60 + (i % 2) * 30,
                 flameOffset: Math.random() * Math.PI
             }))
-        };
-        
-        // Boss enemy configurations
-        this.bossTypes = {
-            GHOST: {
-                emoji: '👻',
-                size: 40,
-                projectileEmoji: '☠️',
-                projectileSize: 15
-            },
-            DEMON: {
-                emoji: '👿',
-                size: 45,
-                projectileEmoji: '🔥',
-                projectileSize: 18
-            },
-            SKULL: {
-                emoji: '💀',
-                size: 50,
-                projectileEmoji: '🦴',
-                projectileSize: 20
-            }
-        };
-        
-        this.bossHasAppeared = false;
-        this.bossShootTimer = {
-            lastShot: 0,
-            minInterval: 3000
         };
         
         // Load UI assets
@@ -682,9 +652,6 @@ export class FlappyBird {
         this.gameStarted = true;
         this.gameOver = false;
         this.levelComplete = false;
-        
-        this.bosses = [];
-        this.bossHasAppeared = false;
         
         this.flashEffect.active = false;
         this.flashEffect.currentFrame = 0;
