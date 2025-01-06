@@ -1314,8 +1314,8 @@ class FlappyBird {
             if (!this.endScreenAnimation.isAnimating) {
                 // Draw medal if loaded
                 if (this.currentMedal && this.currentMedal.complete) {
-                    const medalSize = this.canvas.width * 0.15;
-                    const medalX = this.canvas.width * 0.25;
+                    const medalSize = this.canvas.width * 0.25;
+                    const medalX = this.canvas.width * 0.2;
                     const medalY = this.endScreenAnimation.bgCurrentY + bgHeight * 0.35;
                 
                 this.ctx.drawImage(
@@ -1336,14 +1336,14 @@ class FlappyBird {
                 this.ctx.fillText(
                     this.score.toString(),
                     this.canvas.width * 0.75,
-                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.42
+                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.45
                 );
                 
-                // Draw best score (BEST) - moved slightly right
+                // Draw best score (BEST)
                 this.ctx.fillText(
                     this.bestScore.toString(),
-                    this.canvas.width * 0.77, // Increased from 0.75 to 0.77
-                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.35 + 100
+                    this.canvas.width * 0.77,
+                    this.endScreenAnimation.bgCurrentY + bgHeight * 0.45 + 85
                 );
             }
             
