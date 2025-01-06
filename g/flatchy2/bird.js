@@ -618,8 +618,9 @@ class FlappyBird {
             this.bird.y += this.bird.velocity;
             
             // Transition to END state when bird hits ground
-            if (this.bird.y + this.bird.size > this.canvas.height - 50) {
-                this.bird.y = this.canvas.height - 50 - this.bird.size;
+            const groundY = this.canvas.height - 30; // Reduced from 50 to 30 to match actual ground height
+            if (this.bird.y + this.bird.size > groundY) {
+                this.bird.y = groundY - this.bird.size;
                 this.setState(this.GameState.END);
             }
         }
@@ -655,7 +656,7 @@ class FlappyBird {
 
         // Check ground collision in both PLAYING and DEAD states
         if (this.isState(this.GameState.PLAYING) || this.isState(this.GameState.DEAD)) {
-            const groundY = this.canvas.height - 50; // Ground height is 50px
+            const groundY = this.canvas.height - 30; // Reduced from 50 to 30 to match actual ground height
             if (this.bird.y + this.bird.size > groundY) {
                 this.bird.y = groundY - this.bird.size;
                 
