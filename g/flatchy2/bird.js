@@ -1,6 +1,6 @@
 class FlappyBird {
     constructor() {
-        // Define game states
+        // Game state constants
         this.GameState = {
             TITLE: 'title',
             READY: 'ready',
@@ -9,12 +9,10 @@ class FlappyBird {
             END: 'end'
         };
         
-        // Initialize current state
         this.currentState = this.GameState.TITLE;
-        
         this.gameFont = '"Chalkboard SE", cursive';
         
-        // Load and setup bird sprite animation
+        // Bird sprite setup and loading
         this.birdSprite = new Image();
         this.birdSprite.onload = () => {
             console.log('Sprite loaded:', this.birdSprite.width, 'x', this.birdSprite.height);
@@ -55,7 +53,7 @@ class FlappyBird {
         this.treeImg.src = 'images/game/tree.png';
         this.treeLoaded = false;
 
-        // Load feather trail effects
+        // Feather trail effect assets
         this.feather1 = new Image();
         this.feather1.onload = () => {
             this.feather1Loaded = true;
@@ -84,6 +82,7 @@ class FlappyBird {
         this.feather4.src = 'images/flatchy/feather_4.png';
         this.feather4Loaded = false;
 
+        // Sprite animation configuration
         this.spriteLoaded = false;
         this.spriteAnimation = {
             frameWidth: 8,
@@ -96,22 +95,19 @@ class FlappyBird {
             lastFrameTime: 0
         };
         
-        // Setup difficulty scaling
+        // Difficulty scaling parameters
         this.startingLevel = 1;
         this.speedIncreasePerLevel = 0.5;
         this.pillarSpaceIncreasePerLevel = .05;
         
+        // Canvas setup with mobile-friendly dimensions (16:9 aspect ratio)
         this.canvas = document.createElement('canvas');
-        
-        // Set mobile-friendly dimensions
-        const aspectRatio = 9/16; // Common mobile aspect ratio
-        this.canvas.width = 400; // Base width for mobile
-        this.canvas.height = this.canvas.width / aspectRatio;
-        
+        this.canvas.width = 400;
+        this.canvas.height = this.canvas.width / (9/16);
         document.body.appendChild(this.canvas);
         this.ctx = this.canvas.getContext('2d');
         
-        // Setup bird physics with adjusted values
+        // Bird physics configuration
         this.bird = {
             x: this.canvas.width * 0.25,
             y: this.canvas.height * 0.4,
@@ -121,7 +117,7 @@ class FlappyBird {
             size: this.canvas.width * 0.19
         };
         
-        // Setup game speed and obstacles
+        // Game speed and obstacle settings
         this.baseSpeed = 4.5;
         this.currentSpeed = this.baseSpeed * (1 + (this.startingLevel - 1) * this.speedIncreasePerLevel);
         
@@ -131,13 +127,13 @@ class FlappyBird {
         this.logInterval = 1400;
         this.lastLog = 0;
         
-        // Setup scoring and game state
+        // Score tracking
         this.score = 0;
         this.levelScore = 0;
         this.gameStarted = false;
         this.gameOver = false;
         
-        // Setup UI elements
+        // UI button dimensions
         this.startButton = {
             x: this.canvas.width * 0.25,
             y: this.canvas.height * 0.6,
@@ -149,10 +145,10 @@ class FlappyBird {
             x: 0,
             y: 0,
             width: this.canvas.width * 0.4,
-            height: this.canvas.width * 0.4 * 0.25 // Assuming 4:1 aspect ratio for button
+            height: this.canvas.width * 0.4 * 0.25
         };
         
-        // Setup ambient effects
+        // Ambient fire effect configuration
         this.fireBase = {
             flames: Array(20).fill().map((_, i) => ({
                 x: i * (this.canvas.width / 19),
@@ -163,7 +159,7 @@ class FlappyBird {
         
         this.bosses = [];
         
-        // Setup level completion UI
+        // Level completion UI
         this.levelComplete = false;
         this.continueButton = {
             x: this.canvas.width * 0.25,
@@ -172,7 +168,7 @@ class FlappyBird {
             height: this.canvas.height * 0.1
         };
         
-        // Setup victory effects
+        // Victory flash effect settings
         this.flashEffect = {
             active: false,
             duration: 60,
@@ -182,7 +178,7 @@ class FlappyBird {
         
         this.currentLevel = this.startingLevel;
         
-        // Setup background effects
+        // Background torch effects
         this.background = {
             torches: Array(4).fill().map((_, i) => ({
                 x: i * (this.canvas.width / 3),
@@ -191,7 +187,7 @@ class FlappyBird {
             }))
         };
         
-        // Setup boss types and behaviors
+        // Boss enemy configurations
         this.bossTypes = {
             GHOST: {
                 emoji: '👻',
@@ -214,13 +210,12 @@ class FlappyBird {
         };
         
         this.bossHasAppeared = false;
-        
-        // Setup boss attack timing
         this.bossShootTimer = {
             lastShot: 0,
             minInterval: 3000
         };
         
+        // Load UI assets
         this.startBtnImg = new Image();
         this.startBtnImg.onload = () => {
             this.startBtnLoaded = true;
@@ -242,7 +237,6 @@ class FlappyBird {
         this.titleLogoImg.src = 'images/title/title_logo.png';
         this.titleLogoLoaded = false;
         
-        // Add title flatchy image
         this.titleFlatchyImg = new Image();
         this.titleFlatchyImg.onload = () => {
             this.titleFlatchyLoaded = true;
@@ -253,7 +247,7 @@ class FlappyBird {
         this.gameLoopStarted = false;
         this.bindEvents();
 
-        // Load cloud variations for background
+        // Load cloud variations
         this.clouds = [];
         for (let i = 1; i <= 4; i++) {
             const cloud = new Image();
@@ -265,8 +259,8 @@ class FlappyBird {
             this.clouds.push(cloud);
         }
 
-        // Add title screen state
-        this.titleScreenAlpha = 1; // For fade transition
+        // Title screen configuration
+        this.titleScreenAlpha = 1;
         this.titleScreenElements = {
             logo: {
                 width: 0,
@@ -285,7 +279,7 @@ class FlappyBird {
             }
         };
 
-        // Load title background
+        // Load background assets
         this.titleBgImg = new Image();
         this.titleBgImg.onload = () => {
             this.titleBgLoaded = true;
@@ -293,7 +287,6 @@ class FlappyBird {
         this.titleBgImg.src = 'images/title/title_bg.png';
         this.titleBgLoaded = false;
 
-        // Load sky background
         this.skyBgImg = new Image();
         this.skyBgImg.onload = () => {
             this.skyBgLoaded = true;
@@ -301,10 +294,9 @@ class FlappyBird {
         this.skyBgImg.src = 'images/sky_bg.png';
         this.skyBgLoaded = false;
 
-        // Add ready state
+        // Ready state assets
         this.isReadyState = false;
         
-        // Load tap icon
         this.tapIconImg = new Image();
         this.tapIconImg.onload = () => {
             this.tapIconLoaded = true;
@@ -312,7 +304,6 @@ class FlappyBird {
         this.tapIconImg.src = 'images/tap_icon.png';
         this.tapIconLoaded = false;
         
-        // Load get ready text
         this.getReadyImg = new Image();
         this.getReadyImg.onload = () => {
             this.getReadyLoaded = true;
@@ -320,7 +311,6 @@ class FlappyBird {
         this.getReadyImg.src = 'images/game/get_ready_text.png';
         this.getReadyLoaded = false;
 
-        // Load tap text
         this.tapTextImg = new Image();
         this.tapTextImg.onload = () => {
             this.tapTextLoaded = true;
@@ -328,10 +318,10 @@ class FlappyBird {
         this.tapTextImg.src = 'images/game/tap_text.png';
         this.tapTextLoaded = false;
 
-        // Load whoosh sound
+        // Load sound effects
         this.whooshSound = new Audio('audio/woosh.wav');
         
-        // Load only existing fart sounds
+        // Load fart sound effects (only existing ones)
         this.fartSounds = [];
         const existingGasSounds = [1, 3, 4, 7, 14, 15, 18, 19, 29, 30];
         existingGasSounds.forEach(num => {
@@ -339,17 +329,13 @@ class FlappyBird {
             this.fartSounds.push(sound);
         });
         
-        // Setup fart sound timer for ambient sounds
         this.lastFartTime = 0;
         this.fartInterval = 2000 + Math.random() * 3000;
 
-        // Setup feather particle system
         this.featherParticles = [];
-
-        // Load hit sound
         this.hitSound = new Audio('audio/hit.wav');
 
-        // Load end screen background
+        // End screen assets
         this.endBgImg = new Image();
         this.endBgImg.onload = () => {
             this.endBgLoaded = true;
@@ -357,7 +343,6 @@ class FlappyBird {
         this.endBgImg.src = 'images/end/end_bg.png';
         this.endBgLoaded = false;
         
-        // Load play button
         this.playBtnImg = new Image();
         this.playBtnImg.onload = () => {
             this.playBtnLoaded = true;
@@ -365,7 +350,7 @@ class FlappyBird {
         this.playBtnImg.src = 'images/ui/btns/play_btn_up.png';
         this.playBtnLoaded = false;
 
-        // Add end screen animation properties
+        // End screen animation settings
         this.endScreenAnimation = {
             bgStartY: -this.canvas.height * 0.5,
             bgTargetY: this.canvas.height * 0.2,
@@ -375,32 +360,28 @@ class FlappyBird {
             bounce: -0.3,
             isAnimating: false,
             startTime: 0,
-            animationDuration: 1000 // 1 second
+            animationDuration: 1000
         };
 
-        // Add background parallax scrolling
+        // Parallax scrolling configuration
         this.backgroundOffset = 0;
-        this.backgroundScrollSpeed = 0.5; // Half the speed of the main game
+        this.backgroundScrollSpeed = 0.5;
 
-        // Add cloud system
+        // Cloud system configuration
         this.cloudSystem = {
             clouds: [],
             minY: 0,
             maxY: this.canvas.height * 0.4,
             minGap: this.canvas.width * 0.5,
-            scrollSpeed: 0.3 // Slower than hills
+            scrollSpeed: 0.3
         };
 
-        // Initialize some clouds
         this.initializeClouds();
 
-        // Load click sound
         this.clickSound = new Audio('audio/click.wav');
-
-        // Add best score tracking
         this.bestScore = 0;
 
-        // Load medal images
+        // Medal assets
         this.medal1Img = new Image();
         this.medal1Img.onload = () => {
             this.medal1Loaded = true;
@@ -419,7 +400,6 @@ class FlappyBird {
         };
         this.medal3Img.src = 'images/end/medal_3.png';
 
-        // Add medal state
         this.currentMedal = null;
     }
     
@@ -427,7 +407,7 @@ class FlappyBird {
         this.bosses = [];
         this.bossHasAppeared = false;
         
-        // Set initial game speed based on level
+        // Initialize game speed based on current level
         this.currentSpeed = this.baseSpeed * (1 + (this.startingLevel - 1) * this.speedIncreasePerLevel);
         
         if (!this.gameLoopStarted) {
@@ -442,7 +422,6 @@ class FlappyBird {
             
             switch (this.currentState) {
                 case this.GameState.TITLE:
-                    // Play click for title screen button
                     this.clickSound.currentTime = 0;
                     this.clickSound.play();
                     this.setState(this.GameState.READY);
@@ -453,7 +432,7 @@ class FlappyBird {
                     break;
                     
                 case this.GameState.PLAYING:
-            this.bird.velocity = this.bird.jump;
+                    this.bird.velocity = this.bird.jump;
                     
                     // Play either whoosh or fart sound (35% chance for fart)
                     if (Math.random() < 0.35) {
@@ -468,7 +447,6 @@ class FlappyBird {
                     break;
                     
                 case this.GameState.END:
-                    // Play click for end screen button
                     this.clickSound.currentTime = 0;
                     this.clickSound.play();
                     this.setState(this.GameState.READY);
@@ -476,10 +454,11 @@ class FlappyBird {
             }
         };
         
-        // Handle both mouse clicks and touch events
+        // Handle mouse and touch events
         const handleInteraction = (e) => {
             e.preventDefault();
             
+            // Convert screen coordinates to canvas coordinates
             const rect = this.canvas.getBoundingClientRect();
             const scaleX = this.canvas.width / rect.width;
             const scaleY = this.canvas.height / rect.height;
@@ -489,7 +468,7 @@ class FlappyBird {
             
             switch (this.currentState) {
                 case this.GameState.TITLE:
-                    // Check if click is on start button
+                    // Check if click is within start button bounds
                     const titleBtn = this.titleScreenElements.startButton;
                     if (clickX >= titleBtn.x && 
                         clickX <= titleBtn.x + titleBtn.width &&
@@ -508,15 +487,15 @@ class FlappyBird {
                     break;
                     
                 case this.GameState.END:
-                    // Check if click is on play button
+                    // Check if click is within play button bounds and animation is complete
                     if (!this.endScreenAnimation.isAnimating && 
                         this.playBtnLoaded && 
                         clickX >= this.restartButton.x && 
-                    clickX <= this.restartButton.x + this.restartButton.width &&
-                    clickY >= this.restartButton.y && 
-                    clickY <= this.restartButton.y + this.restartButton.height) {
-                    handleInput();
-                }
+                        clickX <= this.restartButton.x + this.restartButton.width &&
+                        clickY >= this.restartButton.y && 
+                        clickY <= this.restartButton.y + this.restartButton.height) {
+                        handleInput();
+                    }
                     break;
             }
         };
@@ -526,7 +505,7 @@ class FlappyBird {
         
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
-                handleInput(); // Always use handleInput for consistency
+                handleInput();
             }
         });
     }
@@ -540,26 +519,24 @@ class FlappyBird {
     }
     
     update() {
-        // Always update animation frames except in DEAD state
+        // Update sprite animation except in DEAD state
         if (!this.isState(this.GameState.DEAD)) {
-        const currentTime = Date.now();
-        if (currentTime - this.spriteAnimation.lastFrameTime > this.spriteAnimation.frameInterval) {
-            this.spriteAnimation.currentFrame = (this.spriteAnimation.currentFrame + 1) % this.spriteAnimation.totalFrames;
-            this.spriteAnimation.lastFrameTime = currentTime;
+            const currentTime = Date.now();
+            if (currentTime - this.spriteAnimation.lastFrameTime > this.spriteAnimation.frameInterval) {
+                this.spriteAnimation.currentFrame = (this.spriteAnimation.currentFrame + 1) % this.spriteAnimation.totalFrames;
+                this.spriteAnimation.lastFrameTime = currentTime;
             }
         }
 
-        // Update scrolling for READY and PLAYING states only
+        // Handle background scrolling in READY and PLAYING states
         if (this.isState(this.GameState.READY) || this.isState(this.GameState.PLAYING)) {
-            // Scroll ground texture with consistent speed
-        if (this.groundLoaded) {
-                this.groundOffset -= this.baseSpeed * 1.2; // Reduced from 1.5 to 1.2
-            if (this.groundOffset <= -this.groundImg.width) {
-                this.groundOffset = 0;
+            if (this.groundLoaded) {
+                this.groundOffset -= this.baseSpeed * 1.2;
+                if (this.groundOffset <= -this.groundImg.width) {
+                    this.groundOffset = 0;
+                }
             }
-        }
 
-            // Update background position for parallax with slower speed
             if (this.backgroundLoaded) {
                 this.backgroundOffset -= this.baseSpeed * this.backgroundScrollSpeed;
                 if (this.backgroundOffset <= -this.backgroundImg.width * 0.6) {
@@ -568,11 +545,11 @@ class FlappyBird {
             }
         }
 
-        // Only handle logs in PLAYING state
+        // Handle gameplay logic in PLAYING state
         if (this.isState(this.GameState.PLAYING)) {
-        const now = Date.now();
+            const now = Date.now();
             
-            // Generate new logs
+            // Generate new obstacles
             if (now - this.lastLog > this.logInterval) {
                 const screenMiddle = this.canvas.height * 0.5;
                 const playableArea = this.canvas.height * 0.5;
@@ -582,20 +559,20 @@ class FlappyBird {
                 const logY = minY + (Math.random() * (maxY - minY));
                 
                 this.logs.push({
-                x: this.canvas.width,
+                    x: this.canvas.width,
                     y: logY,
-                scored: false
-            });
+                    scored: false
+                });
                 this.lastLog = now;
             }
             
-            // Update logs with slower speed
+            // Update obstacle positions and check collisions
             this.logs.forEach(log => {
-                log.x -= this.baseSpeed; // Reduced from 1.5 to 1 times base speed
+                log.x -= this.baseSpeed;
                 
                 if (!log.scored && log.x + this.logWidth < this.bird.x) {
                     log.scored = true;
-                this.score++;
+                    this.score++;
                 }
                 
                 if (this.checkCollision(log)) {
@@ -604,7 +581,7 @@ class FlappyBird {
                 }
             });
             
-            // Remove off-screen logs
+            // Remove off-screen obstacles
             this.logs = this.logs.filter(log => log.x + this.logWidth > 0);
             
             // Update bird physics
@@ -612,13 +589,12 @@ class FlappyBird {
             this.bird.y += this.bird.velocity;
         }
 
-        // Handle DEAD state separately
+        // Handle bird death animation
         if (this.isState(this.GameState.DEAD)) {
             this.bird.velocity += this.bird.gravity * 1.5;
             this.bird.y += this.bird.velocity;
             
-            // Transition to END state when bird hits ground
-            const groundY = this.canvas.height - 30; // Reduced from 50 to 30 to match actual ground height
+            const groundY = this.canvas.height - 30;
             if (this.bird.y + this.bird.size > groundY) {
                 this.bird.y = groundY - this.bird.size;
                 this.setState(this.GameState.END);
@@ -634,38 +610,28 @@ class FlappyBird {
             }
         }
 
-        // Update feather particles
+        // Update feather particle effects
         this.featherParticles = this.featherParticles.filter(particle => {
-            // Update position
             particle.x += particle.speedX;
             particle.y += particle.speedY;
             particle.speedY += particle.gravity;
-            
-            // Update rotation
             particle.rotation += particle.rotationSpeed;
-            
-            // Add some horizontal wobble
             particle.x += Math.sin(Date.now() / 500 + particle.rotation) * 0.5;
-            
-            // Fade out
             particle.opacity -= 0.005;
             
-            // Keep particle if it's still visible
             return particle.opacity > 0;
         });
 
-        // Check ground collision in both PLAYING and DEAD states
+        // Check ground collision in PLAYING and DEAD states
         if (this.isState(this.GameState.PLAYING) || this.isState(this.GameState.DEAD)) {
-            const groundY = this.canvas.height - 30; // Reduced from 50 to 30 to match actual ground height
+            const groundY = this.canvas.height - 30;
             if (this.bird.y + this.bird.size > groundY) {
                 this.bird.y = groundY - this.bird.size;
                 
                 if (this.isState(this.GameState.PLAYING)) {
-                    // Hit ground while playing - transition to DEAD state
                     this.setState(this.GameState.DEAD);
                     return;
                 } else if (this.isState(this.GameState.DEAD)) {
-                    // Hit ground while dead - transition to END state
                     this.setState(this.GameState.END);
                     return;
                 }
@@ -674,14 +640,11 @@ class FlappyBird {
 
         // Update cloud positions in READY and PLAYING states
         if (this.isState(this.GameState.READY) || this.isState(this.GameState.PLAYING)) {
-            // Update clouds
             this.cloudSystem.clouds.forEach((cloud, index) => {
                 cloud.x -= this.baseSpeed * this.cloudSystem.scrollSpeed;
                 
-                // Remove clouds that are off screen
                 if (cloud.x < -this.canvas.width * cloud.scale) {
                     this.cloudSystem.clouds.splice(index, 1);
-                    // Add new cloud at the right side
                     this.addNewCloud();
                 }
             });
@@ -692,7 +655,7 @@ class FlappyBird {
         this.currentLevel = levelNumber;
         this.levelScore = 0;
         
-        // Scale difficulty with level
+        // Scale difficulty based on level number
         this.currentSpeed = this.baseSpeed * (1 + (levelNumber - 1) * this.speedIncreasePerLevel);
         
         // Reset game state
@@ -722,7 +685,7 @@ class FlappyBird {
     }
     
     checkCollision(log) {
-        // Create a smaller hitbox for the bird (about 75% of visual size)
+        // Create smaller hitbox for better gameplay feel (75% of visual size)
         const hitboxReduction = this.bird.size * 0.25;
         const birdBox = {
             left: this.bird.x + hitboxReduction,
@@ -731,30 +694,27 @@ class FlappyBird {
             bottom: this.bird.y + this.bird.size - hitboxReduction
         };
         
-        // Calculate actual log height based on aspect ratio
+        // Calculate log dimensions based on sprite aspect ratio
         const logAspectRatio = this.treeImg.height / this.treeImg.width;
         const logHeight = this.logWidth * logAspectRatio;
         
-        // Add padding to log hitbox to match visible trunk (40% padding on each side)
-        const logPadding = this.logWidth * 0.4; // Increased from 0.2 to 0.4 to make hitbox even smaller
+        // Add padding to log hitbox to match visible trunk (40% padding)
+        const logPadding = this.logWidth * 0.4;
+        const trunkHeight = logHeight * 0.6;
         
-        // Only check collision with the actual trunk parts
-        const trunkHeight = logHeight * 0.6; // Only check collision with the trunk portion
-        
-        // Top log (flipped)
+        // Define collision boxes for top and bottom logs
         const topLogBox = {
             left: log.x + logPadding,
             right: log.x + this.logWidth - logPadding,
-            top: log.y - trunkHeight, // Only check trunk portion
+            top: log.y - trunkHeight,
             bottom: log.y
         };
         
-        // Bottom log
         const bottomLogBox = {
             left: log.x + logPadding,
             right: log.x + this.logWidth - logPadding,
             top: log.y + this.logGap,
-            bottom: log.y + this.logGap + trunkHeight // Only check trunk portion
+            bottom: log.y + this.logGap + trunkHeight
         };
         
         return this.checkBoxCollision(birdBox, topLogBox) || 
@@ -815,32 +775,30 @@ class FlappyBird {
         }
     }
     
-    // Main game loop
     gameLoop() {
         this.update();
         this.draw();
         this.animationFrame = requestAnimationFrame(() => this.gameLoop());
     }
     
-    // Create a themed button with stone texture and glow effects
     drawDungeonButton(x, y, width, height, text) {
-                this.ctx.save();
+        this.ctx.save();
         
-        // Add orange glow
+        // Add glow effect
         this.ctx.shadowColor = '#ff4400';
         this.ctx.shadowBlur = 20;
         
-        // Create stone texture
+        // Create stone texture background
         this.ctx.fillStyle = '#2C2F33';
         this.ctx.fillRect(x, y, width, height);
         
-        // Add vertical lines for depth
+        // Add depth lines
         this.ctx.fillStyle = '#23272A';
         for (let i = 0; i < width; i += 20) {
             this.ctx.fillRect(x + i, y, 2, height);
         }
         
-        // Add raised border
+        // Add raised border effect
         this.ctx.fillStyle = '#4A4D50';
         this.ctx.fillRect(x - 2, y - 2, width + 4, 4);
         this.ctx.fillRect(x - 2, y + height - 2, width + 4, 4);
@@ -857,7 +815,6 @@ class FlappyBird {
         this.ctx.restore();
     }
 
-    // Add new method to handle title screen transition
     startGameFromTitle() {
         const fadeOut = () => {
             this.titleScreenAlpha -= 0.05;
@@ -870,11 +827,10 @@ class FlappyBird {
         fadeOut();
     }
 
-    // Add new method for drawing title screen
     drawTitleScreen() {
-        // Draw sky background first if loaded
+        // Draw sky background
         if (this.skyBgLoaded) {
-                this.ctx.drawImage(
+            this.ctx.drawImage(
                 this.skyBgImg,
                 0, 0,
                 this.canvas.width,
@@ -882,7 +838,7 @@ class FlappyBird {
             );
         }
         
-        // Draw clouds
+        // Draw parallax clouds
         this.cloudSystem.clouds.forEach(cloud => {
             if (cloud.image && cloud.image.loaded) {
                 const cloudWidth = this.canvas.width * 0.3 * cloud.scale;
@@ -901,7 +857,7 @@ class FlappyBird {
             }
         });
 
-        // Draw hills using same positioning as game state
+        // Draw scrolling hills background
         if (this.backgroundLoaded) {
             const displayWidth = this.backgroundImg.width * 0.6;
             const displayHeight = displayWidth * (this.backgroundImg.height / this.backgroundImg.width);
@@ -918,15 +874,15 @@ class FlappyBird {
             }
         }
 
-        // Draw ground using same positioning as game state
+        // Draw scrolling ground
         if (this.groundLoaded) {
             const groundY = this.canvas.height - 50;
             const groundHeight = 50;
             const groundWidth = groundHeight * (this.groundImg.width / this.groundImg.height);
             
             for (let x = Math.floor(this.groundOffset); x < this.canvas.width + groundWidth; x += groundWidth) {
-            this.ctx.drawImage(
-                this.groundImg,
+                this.ctx.drawImage(
+                    this.groundImg,
                     x, groundY,
                     groundWidth + 1,
                     groundHeight
@@ -934,16 +890,14 @@ class FlappyBird {
             }
         }
         
-        // Draw title logo higher
+        // Draw animated title logo
         if (this.titleLogoLoaded) {
-            // Animate logo
             const logo = this.titleScreenElements.logo;
             logo.width = this.canvas.width * 0.8;
             logo.height = logo.width * (this.titleLogoImg.height / this.titleLogoImg.width);
             logo.x = (this.canvas.width - logo.width) / 2;
-            logo.y = this.canvas.height * 0.25; // Changed from 0.35 to 0.25 to move logo higher
+            logo.y = this.canvas.height * 0.25;
             
-            // Draw logo with slight bounce effect
             const bounce = Math.sin(Date.now() / 1000) * 5;
             this.ctx.drawImage(
                 this.titleLogoImg,
@@ -954,14 +908,14 @@ class FlappyBird {
             );
         }
         
+        // Draw animated character
         if (this.titleFlatchyLoaded) {
             const flatchyWidth = this.canvas.width * 0.4;
             const aspectRatio = this.titleFlatchyImg.height / this.titleFlatchyImg.width;
             const flatchyHeight = flatchyWidth * aspectRatio;
             const flatchyX = (this.canvas.width - flatchyWidth) / 2 - (this.canvas.width * 0.05);
-            const flatchyY = this.canvas.height * 0.4; // Changed from 0.45 to 0.4
+            const flatchyY = this.canvas.height * 0.4;
             
-            // Add floating animation
             const float = Math.sin(Date.now() / 800) * 8;
             
             this.ctx.drawImage(
@@ -973,15 +927,14 @@ class FlappyBird {
             );
         }
         
+        // Draw start button
         if (this.startBtnLoaded) {
-            // Setup start button
             const btn = this.titleScreenElements.startButton;
             btn.width = this.canvas.width * 0.5;
             btn.height = btn.width * (this.startBtnImg.height / this.startBtnImg.width);
             btn.x = (this.canvas.width - btn.width) / 2;
-            btn.y = this.canvas.height * 0.6; // Changed from 0.65 to 0.6
+            btn.y = this.canvas.height * 0.6;
             
-            // Draw button without animation
             this.ctx.drawImage(
                 this.startBtnImg,
                 btn.x,
@@ -997,23 +950,20 @@ class FlappyBird {
         const oldState = this.currentState;
         this.currentState = newState;
         
-        // Handle state exit
+        // Handle state exit actions
         switch (oldState) {
             case this.GameState.TITLE:
                 this.titleScreenAlpha = 0;
                 break;
             case this.GameState.READY:
-                // Clean up ready state
                 break;
             case this.GameState.PLAYING:
-                // Clean up playing state
                 break;
             case this.GameState.END:
-                // Clean up end state
                 break;
         }
         
-        // Handle state enter
+        // Handle state enter actions
         switch (newState) {
             case this.GameState.TITLE:
                 this.titleScreenAlpha = 1;
@@ -1024,19 +974,17 @@ class FlappyBird {
             case this.GameState.PLAYING:
                 this.logs = [];
                 this.score = 0;
-                // Make sure game loop is running
                 if (!this.gameLoopStarted) {
                     this.gameLoopStarted = true;
                     this.gameLoop();
                 }
                 break;
             case this.GameState.DEAD:
-                // Play hit sound when entering dead state
                 this.hitSound.currentTime = 0;
                 this.hitSound.play();
                 break;
             case this.GameState.END:
-                // Determine medal when entering end state
+                // Determine medal based on score
                 const isNewBest = this.score > this.bestScore;
                 if (isNewBest) {
                     this.currentMedal = this.medal3Img;
@@ -1046,25 +994,24 @@ class FlappyBird {
                     this.currentMedal = this.medal1Img;
                 }
                 
-                // Update best score after determining medal
                 this.bestScore = Math.max(this.score, this.bestScore);
                 
-                // Reset and start end screen animation with higher position
+                // Initialize end screen animation
                 this.endScreenAnimation.bgStartY = -this.canvas.height * 0.5;
-                this.endScreenAnimation.bgTargetY = this.canvas.height * 0.1; // Changed from 0.2 to 0.1
+                this.endScreenAnimation.bgTargetY = this.canvas.height * 0.1;
                 this.endScreenAnimation.bgCurrentY = this.endScreenAnimation.bgStartY;
                 this.endScreenAnimation.velocity = 0;
                 this.endScreenAnimation.isAnimating = true;
                 this.endScreenAnimation.startTime = Date.now();
                 
-                // Position restart button initially - moved higher
+                // Position restart button
                 const btnWidth = this.canvas.width * 0.4;
                 const aspectRatio = this.playBtnImg ? (this.playBtnImg.height / this.playBtnImg.width) : 0.25;
                 const btnHeight = btnWidth * aspectRatio;
                 
                 this.restartButton = {
                     x: (this.canvas.width - btnWidth) / 2,
-                    y: this.canvas.height * 0.45, // Changed from 0.55 to 0.45
+                    y: this.canvas.height * 0.45,
                     width: btnWidth,
                     height: btnHeight
                 };
@@ -1076,7 +1023,6 @@ class FlappyBird {
         return this.currentState === state;
     }
     
-    // Helper method to reset bird position
     resetBirdPosition() {
         this.bird = {
             x: this.canvas.width * 0.2,
@@ -1089,9 +1035,9 @@ class FlappyBird {
     }
 
     drawSkyAndHills() {
-        // Draw sky background (static)
+        // Draw static sky background
         if (this.skyBgLoaded) {
-                this.ctx.drawImage(
+            this.ctx.drawImage(
                 this.skyBgImg,
                 0, 0,
                 this.canvas.width,
@@ -1099,7 +1045,7 @@ class FlappyBird {
             );
         }
 
-        // Draw clouds
+        // Draw parallax cloud layer
         this.cloudSystem.clouds.forEach(cloud => {
             if (cloud.image && cloud.image.loaded) {
                 const cloudWidth = this.canvas.width * 0.3 * cloud.scale;
@@ -1118,14 +1064,12 @@ class FlappyBird {
             }
         });
         
-        // Draw scrolling background hills with parallax
+        // Draw scrolling hills with parallax effect
         if (this.backgroundLoaded) {
-            // Calculate dimensions first
             const displayWidth = this.backgroundImg.width * 0.6;
             const displayHeight = displayWidth * (this.backgroundImg.height / this.backgroundImg.width);
-            const y = this.canvas.height - displayHeight - 10; // Changed from -15 to -10 to move hills down more
+            const y = this.canvas.height - displayHeight - 10;
             
-            // Draw copies for seamless scrolling - remove 1px gap between images
             for (let i = 0; i < 3; i++) {
                 const x = Math.floor(this.backgroundOffset + (displayWidth * i));
                 this.ctx.drawImage(
@@ -1144,12 +1088,12 @@ class FlappyBird {
             const groundHeight = 50;
             const groundWidth = groundHeight * (this.groundImg.width / this.groundImg.height);
             
-            // Draw multiple copies of the ground to fill the width, adding 1px overlap
+            // Draw repeating ground segments with 1px overlap to prevent gaps
             for (let x = Math.floor(this.groundOffset); x < this.canvas.width + groundWidth; x += groundWidth) {
                 this.ctx.drawImage(
                     this.groundImg,
                     x, groundY,
-                    groundWidth + 1, // Add 1px overlap to prevent gaps
+                    groundWidth + 1,
                     groundHeight
                 );
             }
@@ -1157,46 +1101,45 @@ class FlappyBird {
     }
 
     drawBird() {
-            this.ctx.save();
+        this.ctx.save();
         
-        // Calculate bird dimensions maintaining aspect ratio
         const birdWidth = this.bird.size;
         const birdHeight = birdWidth * (this.spriteAnimation.frameHeight / this.spriteAnimation.frameWidth);
         
-        // Tilt bird based on state
+        // Apply rotation based on game state
         let rotation = 0;
         if (this.isState(this.GameState.PLAYING)) {
-            rotation = -0.25; // Reduced from -0.4 to -0.25 for a more subtle upward tilt
+            rotation = -0.25;
         } else if (this.isState(this.GameState.DEAD) || this.isState(this.GameState.END)) {
             rotation = Math.min(Math.PI / 2, this.bird.velocity * 0.1);
         }
         
         this.ctx.translate(this.bird.x + birdWidth/2, this.bird.y + birdHeight/2);
-            this.ctx.rotate(rotation);
+        this.ctx.rotate(rotation);
             
-            // Select sprite frame
-            let column, row;
+        // Select appropriate sprite frame
+        let column, row;
         if (this.isState(this.GameState.DEAD) || this.isState(this.GameState.END)) {
-                column = 5;
-                row = 1;
-            } else {
-                column = this.spriteAnimation.currentFrame % this.spriteAnimation.framesPerRow;
-                row = Math.floor(this.spriteAnimation.currentFrame / this.spriteAnimation.framesPerRow);
-            }
+            column = 5;
+            row = 1;
+        } else {
+            column = this.spriteAnimation.currentFrame % this.spriteAnimation.framesPerRow;
+            row = Math.floor(this.spriteAnimation.currentFrame / this.spriteAnimation.framesPerRow);
+        }
             
-            this.ctx.drawImage(
-                this.birdSprite,
-                column * this.spriteAnimation.frameWidth,
-                row * this.spriteAnimation.frameHeight,
-                this.spriteAnimation.frameWidth,
-                this.spriteAnimation.frameHeight,
+        this.ctx.drawImage(
+            this.birdSprite,
+            column * this.spriteAnimation.frameWidth,
+            row * this.spriteAnimation.frameHeight,
+            this.spriteAnimation.frameWidth,
+            this.spriteAnimation.frameHeight,
             -birdWidth/2,
             -birdHeight/2,
             birdWidth,
             birdHeight
-            );
+        );
             
-            this.ctx.restore();
+        this.ctx.restore();
     }
 
     drawReadyOverlay() {
@@ -1206,7 +1149,7 @@ class FlappyBird {
             const aspectRatio = this.getReadyImg.height / this.getReadyImg.width;
             const textHeight = textWidth * aspectRatio;
                 
-                this.ctx.drawImage(
+            this.ctx.drawImage(
                 this.getReadyImg,
                 (this.canvas.width - textWidth) / 2,
                 this.canvas.height * 0.25,
@@ -1215,16 +1158,16 @@ class FlappyBird {
             );
         }
         
-        // Draw tap text next to bird - moved further right
+        // Draw tap instruction next to bird
         if (this.tapTextLoaded) {
             const tapWidth = this.canvas.width * 0.2;
             const aspectRatio = this.tapTextImg.height / this.tapTextImg.width;
             const tapHeight = tapWidth * aspectRatio;
             
-            const tapX = this.bird.x + this.bird.size + (this.canvas.width * 0.15); // Increased from 0.1 to 0.15
+            const tapX = this.bird.x + this.bird.size + (this.canvas.width * 0.15);
             const tapY = this.bird.y + (this.bird.size / 2) - (tapHeight / 2);
                 
-                this.ctx.drawImage(
+            this.ctx.drawImage(
                 this.tapTextImg,
                 tapX,
                 tapY,
@@ -1240,7 +1183,7 @@ class FlappyBird {
                 const aspectRatio = this.treeImg.height / this.treeImg.width;
                 const logHeight = this.logWidth * aspectRatio;
                 
-                // Draw bottom log (extending up from the ground)
+                // Draw bottom obstacle
                 this.ctx.drawImage(
                     this.treeImg,
                     0, 0,
@@ -1249,7 +1192,7 @@ class FlappyBird {
                     this.logWidth, logHeight
                 );
                 
-                // Draw top log (extending down from top, no flip needed)
+                // Draw top obstacle
                 this.ctx.drawImage(
                     this.treeImg,
                     0, 0,
@@ -1262,10 +1205,10 @@ class FlappyBird {
     }
 
     drawHUD() {
-        // Draw score
+        // Draw score with stroke outline
         this.ctx.fillStyle = '#fff';
         this.ctx.font = `bold ${this.canvas.width * 0.06}px ${this.gameFont}`;
-                this.ctx.textAlign = 'center';
+        this.ctx.textAlign = 'center';
         this.ctx.strokeStyle = '#000';
         this.ctx.lineWidth = 3;
         this.ctx.strokeText(this.score.toString(), this.canvas.width / 2, 50);
@@ -1274,23 +1217,19 @@ class FlappyBird {
 
     drawGameOverOverlay() {
         if (this.endBgLoaded) {
-            // Increased width and adjusted position
-            const bgWidth = this.canvas.width * 0.9; // Changed from 0.8 to 0.9
+            const bgWidth = this.canvas.width * 0.9;
             const aspectRatio = this.endBgImg.height / this.endBgImg.width;
             const bgHeight = bgWidth * aspectRatio;
             
-            // Update animation with higher target position
+            // Update end screen animation
             if (this.endScreenAnimation.isAnimating) {
-                // Apply gravity
                 this.endScreenAnimation.velocity += this.endScreenAnimation.gravity;
                 this.endScreenAnimation.bgCurrentY += this.endScreenAnimation.velocity;
                 
-                // Check for bounce at new target position
                 if (this.endScreenAnimation.bgCurrentY > this.endScreenAnimation.bgTargetY) {
                     this.endScreenAnimation.bgCurrentY = this.endScreenAnimation.bgTargetY;
                     this.endScreenAnimation.velocity *= this.endScreenAnimation.bounce;
                     
-                    // Stop animation when bounce is small enough
                     if (Math.abs(this.endScreenAnimation.velocity) < 0.5) {
                         this.endScreenAnimation.isAnimating = false;
                         this.endScreenAnimation.bgCurrentY = this.endScreenAnimation.bgTargetY;
@@ -1298,7 +1237,7 @@ class FlappyBird {
                 }
             }
             
-            // Draw background with current animated position
+            // Draw end screen background
             this.ctx.drawImage(
                 this.endBgImg,
                 (this.canvas.width - bgWidth) / 2,
@@ -1307,15 +1246,15 @@ class FlappyBird {
                 bgHeight
             );
             
-            // Draw scores when animation is complete
+            // Draw score information when animation is complete
             if (!this.endScreenAnimation.isAnimating) {
-                // Draw medal if loaded
+                // Draw medal if available
                 if (this.currentMedal && this.currentMedal.complete) {
                     const medalSize = this.canvas.width * 0.25;
                     const medalX = this.canvas.width * 0.2;
                     const medalY = this.endScreenAnimation.bgCurrentY + bgHeight * 0.35;
                 
-                this.ctx.drawImage(
+                    this.ctx.drawImage(
                         this.currentMedal,
                         medalX,
                         medalY,
@@ -1324,19 +1263,17 @@ class FlappyBird {
                     );
                 }
                 
-                // Set up text properties
+                // Draw score text
                 this.ctx.fillStyle = '#000';
                 this.ctx.font = `bold ${this.canvas.width * 0.08}px ${this.gameFont}`;
                 this.ctx.textAlign = 'right';
                 
-                // Draw current score (SCORE)
                 this.ctx.fillText(
                     this.score.toString(),
                     this.canvas.width * 0.75,
                     this.endScreenAnimation.bgCurrentY + bgHeight * 0.45
                 );
                 
-                // Draw best score (BEST)
                 this.ctx.fillText(
                     this.bestScore.toString(),
                     this.canvas.width * 0.77,
@@ -1344,22 +1281,19 @@ class FlappyBird {
                 );
             }
             
-            // Draw play button - using same dimensions as start button
+            // Draw UI buttons
             if (this.playBtnLoaded) {
-                const btnWidth = this.canvas.width * 0.5; // Changed from 0.4 to 0.5 to match start button
+                const btnWidth = this.canvas.width * 0.5;
                 const aspectRatio = this.playBtnImg.height / this.playBtnImg.width;
                 const btnHeight = btnWidth * aspectRatio;
                 
-                // Calculate button position based on animation
                 const baseY = this.canvas.height * 0.45;
                 const buttonY = this.endScreenAnimation.isAnimating ? 
                     baseY + (this.endScreenAnimation.bgCurrentY - this.endScreenAnimation.bgTargetY) : 
                     baseY;
 
-                // Update hitbox position
                 const buttonX = (this.canvas.width - btnWidth) / 2;
                 
-                // Update the restart button hitbox to match final position
                 this.restartButton = {
                     x: buttonX,
                     y: this.endScreenAnimation.isAnimating ? buttonY : baseY,
@@ -1367,8 +1301,7 @@ class FlappyBird {
                     height: btnHeight
                 };
                 
-                // Draw the play button
-                    this.ctx.drawImage(
+                this.ctx.drawImage(
                     this.playBtnImg,
                     buttonX,
                     buttonY,
@@ -1376,54 +1309,48 @@ class FlappyBird {
                     btnHeight
                 );
 
-                // Draw plain button below play button with same dimensions
-            if (this.plainBtnLoaded) {
-                    const plainBtnY = buttonY + btnHeight + 20; // 20px gap between buttons
-                this.ctx.drawImage(
-                    this.plainBtnImg,
+                // Draw secondary button
+                if (this.plainBtnLoaded) {
+                    const plainBtnY = buttonY + btnHeight + 20;
+                    this.ctx.drawImage(
+                        this.plainBtnImg,
                         buttonX,
                         plainBtnY,
-                    btnWidth,
-                    btnHeight
-                );
+                        btnWidth,
+                        btnHeight
+                    );
                 }
             }
         }
     }
 
-    // Add new method to create feather particles
     createFeatherBurst() {
         const featherImages = [];
         
-        // Only add feathers that are loaded
         if (this.feather1Loaded) featherImages.push(this.feather1);
         if (this.feather2Loaded) featherImages.push(this.feather2);
         if (this.feather3Loaded) featherImages.push(this.feather3);
         if (this.feather4Loaded) featherImages.push(this.feather4);
         
-        // Only create particles if we have loaded feather images
         if (featherImages.length > 0) {
-            const numFeathers = 6; // Reduced from 8 to 6 feathers per burst
+            const numFeathers = 6;
             
             for (let i = 0; i < numFeathers; i++) {
-                // Randomly select a feather image
                 const randomFeather = featherImages[Math.floor(Math.random() * featherImages.length)];
                 
-                // Calculate bird dimensions (same as in drawBird)
                 const birdWidth = this.bird.size;
                 const birdHeight = birdWidth * (this.spriteAnimation.frameHeight / this.spriteAnimation.frameWidth);
                 
-                // Calculate spawn position at bird's rear
-                const spawnX = this.bird.x + birdWidth * 0.3;  // Moved from 0.6 to 0.3 to spawn more towards left
+                // Spawn feathers from bird's rear position
+                const spawnX = this.bird.x + birdWidth * 0.3;
                 const spawnY = this.bird.y + birdHeight * 0.4;
                 
-                // Calculate burst velocity
+                // Calculate burst velocity and direction
                 const burstSpeed = 2.5 + Math.random() * 1;
-                const angle = Math.PI + (Math.random() * 1.2 - 0.6); // Keep same wide spread angle
+                const angle = Math.PI + (Math.random() * 1.2 - 0.6);
                 const speedX = Math.cos(angle) * burstSpeed;
                 const speedY = Math.sin(angle) * burstSpeed;
                 
-                // Create particle with burst properties
                 const particle = {
                     img: randomFeather,
                     x: spawnX,
@@ -1433,7 +1360,7 @@ class FlappyBird {
                     speedY: speedY,
                     rotation: Math.random() * Math.PI * 2,
                     rotationSpeed: (Math.random() - 0.5) * 0.2,
-                    gravity: 0.01, // Keep same low gravity for slow falling
+                    gravity: 0.01,
                     opacity: 1
                 };
                 
@@ -1442,17 +1369,14 @@ class FlappyBird {
         }
     }
 
-    // Remove feather particle drawing from drawBird method and create new method
     drawFeatherParticles() {
         this.featherParticles.forEach(particle => {
-        this.ctx.save();
+            this.ctx.save();
             this.ctx.globalAlpha = particle.opacity;
             
-            // Move to particle position and apply rotation
             this.ctx.translate(particle.x + particle.size/2, particle.y + particle.size/2);
             this.ctx.rotate(particle.rotation);
             
-            // Draw the feather
             this.ctx.drawImage(
                 particle.img,
                 -particle.size/2,
@@ -1461,20 +1385,17 @@ class FlappyBird {
                 particle.size
             );
         
-        this.ctx.restore();
+            this.ctx.restore();
         });
     }
 
-    // Add new method to initialize clouds
     initializeClouds() {
-        // Create initial set of clouds spread across the screen
         const numInitialClouds = 4;
         for (let i = 0; i < numInitialClouds; i++) {
             this.addNewCloud(i * (this.canvas.width / 2));
         }
     }
 
-    // Add new method to create clouds
     addNewCloud(x = this.canvas.width) {
         const cloud = {
             x: x,
