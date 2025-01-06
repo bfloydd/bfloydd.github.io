@@ -1,4 +1,6 @@
-class FlappyBird {
+import { StateMachine } from './machine.js';
+
+export class FlappyBird {
     constructor() {
         // Game state constants
         this.GameState = {
@@ -9,7 +11,15 @@ class FlappyBird {
             END: 'end'
         };
         
-        this.currentState = this.GameState.TITLE;
+        // Initialize state machine
+        this.stateMachine = new StateMachine(
+            Object.values(this.GameState),
+            this.GameState.TITLE
+        );
+
+        // Set up state handlers
+        this.setupStateHandlers();
+        
         this.gameFont = '"Chalkboard SE", cursive';
         
         // Bird sprite setup and loading
@@ -420,7 +430,7 @@ class FlappyBird {
         const handleInput = () => {
             if (!this.spriteLoaded) return;
             
-            switch (this.currentState) {
+            switch (this.stateMachine.getCurrentState()) {
                 case this.GameState.TITLE:
                     this.clickSound.currentTime = 0;
                     this.clickSound.play();
@@ -466,7 +476,7 @@ class FlappyBird {
             const clickX = ((e.touches ? e.touches[0].clientX : e.clientX) - rect.left) * scaleX;
             const clickY = ((e.touches ? e.touches[0].clientY : e.clientY) - rect.top) * scaleY;
             
-            switch (this.currentState) {
+            switch (this.stateMachine.getCurrentState()) {
                 case this.GameState.TITLE:
                     // Check if click is within start button bounds
                     const titleBtn = this.titleScreenElements.startButton;
@@ -733,7 +743,7 @@ class FlappyBird {
         
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        switch (this.currentState) {
+        switch (this.stateMachine.getCurrentState()) {
             case this.GameState.TITLE:
                 this.drawTitleScreen();
                 break;
@@ -947,80 +957,11 @@ class FlappyBird {
 
     // Add state machine methods
     setState(newState) {
-        const oldState = this.currentState;
-        this.currentState = newState;
-        
-        // Handle state exit actions
-        switch (oldState) {
-            case this.GameState.TITLE:
-                this.titleScreenAlpha = 0;
-                break;
-            case this.GameState.READY:
-                break;
-            case this.GameState.PLAYING:
-                break;
-            case this.GameState.END:
-                break;
-        }
-        
-        // Handle state enter actions
-        switch (newState) {
-            case this.GameState.TITLE:
-                this.titleScreenAlpha = 1;
-                break;
-            case this.GameState.READY:
-                this.resetBirdPosition();
-                break;
-            case this.GameState.PLAYING:
-                this.logs = [];
-                this.score = 0;
-                if (!this.gameLoopStarted) {
-                    this.gameLoopStarted = true;
-                    this.gameLoop();
-                }
-                break;
-            case this.GameState.DEAD:
-                this.hitSound.currentTime = 0;
-                this.hitSound.play();
-                break;
-            case this.GameState.END:
-                // Determine medal based on score
-                const isNewBest = this.score > this.bestScore;
-                if (isNewBest) {
-                    this.currentMedal = this.medal3Img;
-                } else if (this.score > 3) {
-                    this.currentMedal = this.medal2Img;
-                } else {
-                    this.currentMedal = this.medal1Img;
-                }
-                
-                this.bestScore = Math.max(this.score, this.bestScore);
-                
-                // Initialize end screen animation
-                this.endScreenAnimation.bgStartY = -this.canvas.height * 0.5;
-                this.endScreenAnimation.bgTargetY = this.canvas.height * 0.1;
-                this.endScreenAnimation.bgCurrentY = this.endScreenAnimation.bgStartY;
-                this.endScreenAnimation.velocity = 0;
-                this.endScreenAnimation.isAnimating = true;
-                this.endScreenAnimation.startTime = Date.now();
-                
-                // Position restart button
-                const btnWidth = this.canvas.width * 0.4;
-                const aspectRatio = this.playBtnImg ? (this.playBtnImg.height / this.playBtnImg.width) : 0.25;
-                const btnHeight = btnWidth * aspectRatio;
-                
-                this.restartButton = {
-                    x: (this.canvas.width - btnWidth) / 2,
-                    y: this.canvas.height * 0.45,
-                    width: btnWidth,
-                    height: btnHeight
-                };
-                break;
-        }
+        this.stateMachine.setState(newState);
     }
     
     isState(state) {
-        return this.currentState === state;
+        return this.stateMachine.isState(state);
     }
     
     resetBirdPosition() {
@@ -1404,5 +1345,69 @@ class FlappyBird {
             image: this.clouds[Math.floor(Math.random() * this.clouds.length)]
         };
         this.cloudSystem.clouds.push(cloud);
+    }
+
+    setupStateHandlers() {
+        // Exit handlers
+        this.stateMachine.onExit(this.GameState.TITLE, () => {
+            this.titleScreenAlpha = 0;
+        });
+
+        // Enter handlers
+        this.stateMachine.onEnter(this.GameState.TITLE, () => {
+            this.titleScreenAlpha = 1;
+        });
+
+        this.stateMachine.onEnter(this.GameState.READY, () => {
+            this.resetBirdPosition();
+        });
+
+        this.stateMachine.onEnter(this.GameState.PLAYING, () => {
+            this.logs = [];
+            this.score = 0;
+            if (!this.gameLoopStarted) {
+                this.gameLoopStarted = true;
+                this.gameLoop();
+            }
+        });
+
+        this.stateMachine.onEnter(this.GameState.DEAD, () => {
+            this.hitSound.currentTime = 0;
+            this.hitSound.play();
+        });
+
+        this.stateMachine.onEnter(this.GameState.END, () => {
+            // Determine medal based on score
+            const isNewBest = this.score > this.bestScore;
+            if (isNewBest) {
+                this.currentMedal = this.medal3Img;
+            } else if (this.score > 3) {
+                this.currentMedal = this.medal2Img;
+            } else {
+                this.currentMedal = this.medal1Img;
+            }
+            
+            this.bestScore = Math.max(this.score, this.bestScore);
+            
+            // Initialize end screen animation
+            this.endScreenAnimation.bgStartY = -this.canvas.height * 0.5;
+            this.endScreenAnimation.bgTargetY = this.canvas.height * 0.1;
+            this.endScreenAnimation.bgCurrentY = this.endScreenAnimation.bgStartY;
+            this.endScreenAnimation.velocity = 0;
+            this.endScreenAnimation.isAnimating = true;
+            this.endScreenAnimation.startTime = Date.now();
+            
+            // Position restart button
+            const btnWidth = this.canvas.width * 0.4;
+            const aspectRatio = this.playBtnImg ? (this.playBtnImg.height / this.playBtnImg.width) : 0.25;
+            const btnHeight = btnWidth * aspectRatio;
+            
+            this.restartButton = {
+                x: (this.canvas.width - btnWidth) / 2,
+                y: this.canvas.height * 0.45,
+                width: btnWidth,
+                height: btnHeight
+            };
+        });
     }
 } 
