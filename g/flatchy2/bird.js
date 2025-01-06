@@ -1427,7 +1427,7 @@ class FlappyBird {
                     img: randomFeather,
                     x: spawnX,
                     y: spawnY,
-                    size: this.bird.size * (0.15 + Math.random() * 0.15), // Slightly smaller size
+                    size: this.bird.size * (0.1 + Math.random() * 0.1), // Reduced from 0.15-0.3 to 0.1-0.2 for smaller feathers
                     speedX: speedX,
                     speedY: speedY,
                     rotation: Math.random() * Math.PI * 2,
