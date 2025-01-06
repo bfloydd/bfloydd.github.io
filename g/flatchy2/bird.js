@@ -655,9 +655,9 @@ class FlappyBird {
 
         // Check ground collision in both PLAYING and DEAD states
         if (this.isState(this.GameState.PLAYING) || this.isState(this.GameState.DEAD)) {
-            // Ground collision (50px is the height of ground.png)
-            if (this.bird.y + this.bird.size > this.canvas.height - 50) {
-                this.bird.y = this.canvas.height - 50 - this.bird.size;
+            const groundY = this.canvas.height - 50; // Ground height is 50px
+            if (this.bird.y + this.bird.size > groundY) {
+                this.bird.y = groundY - this.bird.size;
                 
                 if (this.isState(this.GameState.PLAYING)) {
                     // Hit ground while playing - transition to DEAD state
@@ -958,7 +958,7 @@ class FlappyBird {
             const aspectRatio = this.titleFlatchyImg.height / this.titleFlatchyImg.width;
             const flatchyHeight = flatchyWidth * aspectRatio;
             const flatchyX = (this.canvas.width - flatchyWidth) / 2 - (this.canvas.width * 0.05);
-            const flatchyY = this.canvas.height * 0.7;
+            const flatchyY = this.canvas.height * 0.4; // Changed from 0.45 to 0.4
             
             // Add floating animation
             const float = Math.sin(Date.now() / 800) * 8;
@@ -978,10 +978,10 @@ class FlappyBird {
             btn.width = this.canvas.width * 0.5;
             btn.height = btn.width * (this.startBtnImg.height / this.startBtnImg.width);
             btn.x = (this.canvas.width - btn.width) / 2;
-            btn.y = this.canvas.height * 0.48;
+            btn.y = this.canvas.height * 0.6; // Changed from 0.65 to 0.6
             
             // Draw button without animation
-                this.ctx.drawImage(
+            this.ctx.drawImage(
                 this.startBtnImg,
                 btn.x,
                 btn.y,
