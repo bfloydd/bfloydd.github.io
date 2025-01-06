@@ -1239,27 +1239,23 @@ class FlappyBird {
                 const aspectRatio = this.treeImg.height / this.treeImg.width;
                 const logHeight = this.logWidth * aspectRatio;
                 
-                // Draw bottom log (extending below screen if needed)
+                // Draw bottom log (extending up from the ground)
                 this.ctx.drawImage(
                     this.treeImg,
                     0, 0,
                     this.treeImg.width, this.treeImg.height,
-                    log.x + 1, log.y + this.logGap,
+                    log.x, log.y + this.logGap,
                     this.logWidth, logHeight
                 );
                 
-                // Draw top log (flipped and extending above screen if needed)
-                this.ctx.save();
-                this.ctx.translate(log.x + this.logWidth/2, log.y);
-                this.ctx.scale(1, -1);
+                // Draw top log (extending down from top, no flip needed)
                 this.ctx.drawImage(
                     this.treeImg,
                     0, 0,
                     this.treeImg.width, this.treeImg.height,
-                    -this.logWidth/2 + 1, 0,
+                    log.x, log.y - logHeight,
                     this.logWidth, logHeight
                 );
-                this.ctx.restore();
             }
         });
     }
