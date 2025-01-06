@@ -17,7 +17,7 @@
         canvas {
             width: 100%;
             height: 100vh;
-            max-width: 450px; /* Prevent the game from getting too wide */
+            max-width: 450px; /* Limit game width for larger screens */
             max-height: 100vh;
             object-fit: contain;
             border: none;
@@ -34,26 +34,26 @@
     <script type="module">
         import { FlappyBird } from './bird.js';
         
-        // Add responsive canvas sizing
+        // Initialize game
         const game = new FlappyBird();
         
-        // Resize handler
+        // Handle canvas resizing to maintain aspect ratio and responsiveness
         function resizeCanvas() {
             const canvas = document.querySelector('canvas');
             const aspectRatio = 9/16;
             
             if (window.innerHeight / window.innerWidth > aspectRatio) {
-                // Height is the limiting factor
+                // Vertical/portrait mode - fit to height
                 canvas.style.width = 'auto';
                 canvas.style.height = '100vh';
             } else {
-                // Width is the limiting factor
+                // Horizontal/landscape mode - fit to width
                 canvas.style.width = '100%';
                 canvas.style.height = 'auto';
             }
         }
 
-        // Initial resize and add listener
+        // Set up initial size and listen for window resize events
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
     </script>
