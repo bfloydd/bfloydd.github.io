@@ -1406,19 +1406,23 @@ class FlappyBird {
         
         // Only create particles if we have loaded feather images
         if (featherImages.length > 0) {
-            const numFeathers = 4;
+            const numFeathers = 8; // Increased from 4 to 8 feathers per burst
             
             for (let i = 0; i < numFeathers; i++) {
                 // Randomly select a feather image
                 const randomFeather = featherImages[Math.floor(Math.random() * featherImages.length)];
                 
+                // Calculate bird dimensions (same as in drawBird)
+                const birdWidth = this.bird.size;
+                const birdHeight = birdWidth * (this.spriteAnimation.frameHeight / this.spriteAnimation.frameWidth);
+                
                 // Calculate spawn position at bird's rear
-                const spawnX = this.bird.x - this.bird.size * 0.2; // Slightly behind the bird
-                const spawnY = this.bird.y + this.bird.size * 0.5; // Center height of bird
+                const spawnX = this.bird.x + birdWidth * 0.1;  // Just slightly offset from bird's left edge
+                const spawnY = this.bird.y + birdHeight/2; // Center Y of bird
                 
                 // Calculate burst velocity
-                const burstSpeed = 3 + Math.random() * 2;
-                const angle = Math.PI + (Math.random() * 0.5 - 0.25); // Spread angle behind bird
+                const burstSpeed = 2.5 + Math.random() * 1; // Increased initial burst speed for more explosive effect
+                const angle = Math.PI + (Math.random() * 1.2 - 0.6); // Keep same wide spread angle
                 const speedX = Math.cos(angle) * burstSpeed;
                 const speedY = Math.sin(angle) * burstSpeed;
                 
@@ -1427,12 +1431,12 @@ class FlappyBird {
                     img: randomFeather,
                     x: spawnX,
                     y: spawnY,
-                    size: this.bird.size * (0.1 + Math.random() * 0.1), // Reduced from 0.15-0.3 to 0.1-0.2 for smaller feathers
+                    size: this.bird.size * (0.08 + Math.random() * 0.08),
                     speedX: speedX,
                     speedY: speedY,
                     rotation: Math.random() * Math.PI * 2,
                     rotationSpeed: (Math.random() - 0.5) * 0.2,
-                    gravity: 0.1,
+                    gravity: 0.01, // Keep same low gravity for slow falling
                     opacity: 1
                 };
                 
