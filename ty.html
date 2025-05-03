@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Us</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            text-align: center;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px 50px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.8em;
+            letter-spacing: 1px;
+        }
+        p {
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            line-height: 1.5;
+        }
+        .button {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .button:hover::before {
+            opacity: 1;
+        }
+        .button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .venmo {
+            background: linear-gradient(135deg, #0077b5, #00aaff);
+        }
+        .paypal {
+            background: linear-gradient(135deg, #ffc439, #ff8c00);
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Support Our Work</h1>
+        <p>Your contributions help us create more amazing things. Thank you for your generosity!</p>
+        <a href="https://venmo.com/bfloydd?txn=pay" target="_blank" class="button venmo">Donate via Venmo</a>
+        <a href="https://paypal.me/bfloydd" target="_blank" class="button paypal">Donate via PayPal</a>
+    </div>
+</body>
+</html>
