@@ -5,46 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Support Us</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'MedievalSharp', cursive;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: #fff;
+            background: url('https://www.transparenttextures.com/patterns/ancient-wall.png'), linear-gradient(135deg, #3a1f1b, #1a0e0c);
+            background-size: cover;
+            color: #f5deb3;
             text-align: center;
         }
         .container {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 30px 50px;
-            border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.85);
+            padding: 30px 40px;
+            max-width: 600px;
+            width: 90%;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            border: 3px solid #8b4513;
         }
         h1 {
             margin-bottom: 20px;
-            font-size: 2.8em;
-            letter-spacing: 1px;
+            font-size: 2.5em;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 5px #000;
         }
         p {
             margin-bottom: 30px;
             font-size: 1.2em;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         .button {
             display: inline-block;
             margin: 10px;
-            padding: 15px 40px;
-            font-size: 1.2em;
+            padding: 12px 30px;
+            font-size: 1.1em;
             font-weight: bold;
             color: #fff;
             text-decoration: none;
-            border-radius: 50px;
+            border-radius: 10px;
             transition: transform 0.3s, box-shadow 0.3s;
             position: relative;
             overflow: hidden;
+            border: 2px solid #8b4513;
         }
         .button::before {
             content: '';
@@ -62,21 +70,21 @@
         }
         .button:hover {
             transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
         }
         .venmo {
-            background: linear-gradient(135deg, #0077b5, #00aaff);
+            background: linear-gradient(135deg, #6b4226, #8b5a2b);
         }
         .paypal {
-            background: linear-gradient(135deg, #ffc439, #ff8c00);
-            color: #333;
+            background: linear-gradient(135deg, #8b5a2b, #a0522d);
+            color: #fff;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Support Our Work</h1>
-        <p>Your contributions help us create more amazing things. Thank you for your generosity!</p>
+        <h1>Support Our Quest</h1>
+        <p>Your contributions help us forge new paths and create legendary works. Thank you for your chivalry!</p>
         <a href="https://venmo.com/bfloydd?txn=pay" target="_blank" class="button venmo">Donate via Venmo</a>
         <a href="https://paypal.me/bfloydd" target="_blank" class="button paypal">Donate via PayPal</a>
     </div>
