@@ -78,6 +78,7 @@ figcaption {
     text-decoration: none;
     color: var(--color-text);
     display: block;
+    font-weight: 600;
 }
 
 .projects-grid {
