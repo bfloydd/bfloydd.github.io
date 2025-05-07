@@ -4,89 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Support Us</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 
         body {
-            font-family: 'MedievalSharp', cursive;
+            font-family: 'Lato', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: url('https://www.transparenttextures.com/patterns/ancient-wall.png'), linear-gradient(135deg, #3a1f1b, #1a0e0c);
-            background-size: cover;
-            color: #f5deb3;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
             text-align: center;
         }
         .container {
-            background: rgba(0, 0, 0, 0.85);
-            padding: 30px 40px;
+            background: #ffffff;
+            padding: 40px;
             max-width: 600px;
             width: 90%;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
-            border: 3px solid #8b4513;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
         h1 {
             margin-bottom: 20px;
-            font-size: 2.5em;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 5px #000;
+            font-size: 2.2em;
+            color: #2c3e50;
         }
         p {
             margin-bottom: 30px;
-            font-size: 1.2em;
+            font-size: 1.1em;
             line-height: 1.6;
+            color: #555;
         }
         .button {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             margin: 10px;
-            padding: 12px 30px;
+            padding: 12px 25px;
             font-size: 1.1em;
             font-weight: bold;
             color: #fff;
             text-decoration: none;
-            border-radius: 10px;
-            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 6px;
+            transition: transform 0.2s, box-shadow 0.2s;
             position: relative;
-            overflow: hidden;
-            border: 2px solid #8b4513;
+            width: 200px;
         }
-        .button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .button:hover::before {
-            opacity: 1;
+        .button i {
+            margin-right: 10px;
+            font-size: 1.2em;
         }
         .button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .coffee {
+            background: #FFDD00;
+            color: #000;
         }
         .venmo {
-            background: linear-gradient(135deg, #6b4226, #8b5a2b);
+            background: #3D95CE;
         }
         .paypal {
-            background: linear-gradient(135deg, #8b5a2b, #a0522d);
+            background: #003087;
             color: #fff;
+        }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Support Our Quest</h1>
-        <p>Your contributions help us forge new paths and create legendary works. Thank you for your chivalry!</p>
-        <a href="https://venmo.com/bfloydd?txn=pay" target="_blank" class="button venmo">Donate via Venmo</a>
-        <a href="https://paypal.me/bfloydd" target="_blank" class="button paypal">Donate via PayPal</a>
+        <h1>Support Our Work</h1>
+        <p>Your contributions keep the lights on and the rabbits fed.<br /> Thank you for your support!</p>
+        <div class="button-container">
+            <a href="https://buymeacoffee.com/floydpro" target="_blank" class="button coffee">
+                <i class="fa-solid fa-mug-hot"></i>
+                Buy Me a Coffee
+            </a>
+            <a href="https://venmo.com/floydpro?txn=pay" target="_blank" class="button venmo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 512 512" style="margin-right: 10px; fill: white;">
+                    <path d="M444.17,32H70.28C49.85,32,32,46.7,32,66.89V441.61C32,461.91,49.85,480,70.28,480H444.06C464.6,480,480,461.79,480,441.61V66.89C480.12,46.7,464.6,32,444.17,32ZM278,387H174.32L132.66,138.86H240.26L256.98,296.36C259.5,242.06,297.76,202.24,336.06,180.36L302.72,387H214.76"/>
+                </svg>
+                Donate via Venmo
+            </a>
+            <a href="https://paypal.me/bfloydd" target="_blank" class="button paypal">
+                <i class="fa-brands fa-paypal"></i>
+                Donate via PayPal
+            </a>
+        </div>
     </div>
 </body>
 </html>
